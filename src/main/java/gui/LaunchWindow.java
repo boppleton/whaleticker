@@ -32,7 +32,7 @@ public class LaunchWindow extends JFrame {
 
         connectBitmex();
 
-//        connectBitfinex();
+        connectBitfinex();
 
         setLayout(new GridBagLayout());
 

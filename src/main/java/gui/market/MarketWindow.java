@@ -34,25 +34,15 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 
     private ArrayList<String> instruments = new ArrayList<>();
     private JRadioButton bitmexPerpSwapRadio;
-    private boolean bitmexPerpBool;
     private JRadioButton bitfinexSpotRadio;
-    private boolean bitfinexSpotBool;
     private JRadioButton okexSpotRadio;
-    private boolean okexSpotBool;
     private JRadioButton gdaxSpotRadio;
-    private boolean gdaxSpotBool;
     private JRadioButton binanceSpotRadio;
-    private boolean binanceSpotBool;
     private JRadioButton bitmexJuneRadio;
-    private boolean bitmexJuneBool;
     private JRadioButton bitmexSeptRadio;
-    private boolean bitmexSeptBool;
     private JRadioButton okexThisWeekRadio;
-    private boolean okexThisWeekBool;
     private JRadioButton okexNextWeekRadio;
-    private boolean okexNextWeeBool;
     private JRadioButton okexQuarterlyRadio;
-    private boolean okexQuarterlyBool;
 
     public MarketWindow(String title) {
         super(title);
@@ -64,6 +54,11 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         orders.add(new MarketOrder("bitmex", 80000, 3));
 
 
+        setupTableScrollpane();
+
+    }
+
+    private void setupTableScrollpane() {
 
         tradesTable = new JTable(new MarketOrdersTableModel(orders));
         tradesTable.setDefaultRenderer(MarketOrder.class, new MarketOrderCell());
@@ -71,8 +66,17 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         tradesTable.setTableHeader(null);
         tradesTable.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
+
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     settingsDialog();
+                } else if (e.getButton() == MouseEvent.BUTTON2) {
+
+                    EventQueue.invokeLater(() -> {
+                        orders.clear();
+//                        revalidate();
+                        tradesTable.revalidate();
+//                        tradesScrollPane.revalidate();
+                    });
                 }
             }
 
@@ -107,6 +111,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         tradesScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
         tradesScrollPane.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
+
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     settingsDialog();
                 }
@@ -130,7 +135,6 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         });
 
         this.add(tradesScrollPane);
-
     }
 
     private void settingsDialog() {
@@ -147,28 +151,28 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
 
-        bitmexPerpSwapRadio = new JRadioButton("bitmex perp swap", bitmexPerpBool);
+        bitmexPerpSwapRadio = new JRadioButton("bitmex perp swap", instruments.contains("bitmexPerp"));
         spotPanel.add(bitmexPerpSwapRadio, gbc);
 
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        bitfinexSpotRadio = new JRadioButton("bitfinex spot", bitfinexSpotBool);
+        bitfinexSpotRadio = new JRadioButton("bitfinex spot", instruments.contains("bitfinexSpot"));
         spotPanel.add(bitfinexSpotRadio, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        okexSpotRadio = new JRadioButton("okex spot", okexSpotBool);
+        okexSpotRadio = new JRadioButton("okex spot", instruments.contains("okexSpot"));
         spotPanel.add(okexSpotRadio, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        gdaxSpotRadio = new JRadioButton("gdax spot", gdaxSpotBool);
+        gdaxSpotRadio = new JRadioButton("gdax spot", instruments.contains("gdaxSpot"));
         spotPanel.add(gdaxSpotRadio, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 4;
-        binanceSpotRadio = new JRadioButton("binance spot", binanceSpotBool);
+        binanceSpotRadio = new JRadioButton("binance spot", instruments.contains("binanceSpot"));
         spotPanel.add(binanceSpotRadio, gbc);
 
         gbc.gridx = 0;
@@ -182,29 +186,29 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        bitmexJuneRadio = new JRadioButton("bitmex june futures", bitmexJuneBool);
+        bitmexJuneRadio = new JRadioButton("bitmex june futures", instruments.contains("bitmexJune"));
         futuresPanel.add(bitmexJuneRadio, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        bitmexSeptRadio = new JRadioButton("bitmex september futures", bitmexSeptBool);
+        bitmexSeptRadio = new JRadioButton("bitmex september futures", instruments.contains("bitmexSept"));
         futuresPanel.add(bitmexSeptRadio, gbc);
 
 
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        okexThisWeekRadio = new JRadioButton("okex this week futures", okexThisWeekBool);
+        okexThisWeekRadio = new JRadioButton("okex this week futures", instruments.contains("okexThisWeek"));
         futuresPanel.add(okexThisWeekRadio, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        okexNextWeekRadio = new JRadioButton("okex next week futures", okexNextWeeBool);
+        okexNextWeekRadio = new JRadioButton("okex next week futures", instruments.contains("okexNextWeek"));
         futuresPanel.add(okexNextWeekRadio, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 4;
-        okexQuarterlyRadio = new JRadioButton("okex quarterly futures", okexQuarterlyBool);
+        okexQuarterlyRadio = new JRadioButton("okex quarterly futures", instruments.contains("okexQuarterly"));
         futuresPanel.add(okexQuarterlyRadio, gbc);
 
         gbc.gridx = 0;
@@ -301,21 +305,34 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 
     private void setInstruments() {
 
-        if (bitmexPerpSwapRadio.isSelected() && !bitmexPerpBool) {
-            bitmexPerpBool = true;
-            instruments.add("bitmexPerp");
+        setInstrumentBool(bitmexPerpSwapRadio, "bitmexPerp");
+        setInstrumentBool(bitfinexSpotRadio, "bitfinexSpot");
+        setInstrumentBool(okexSpotRadio, "okexSpot");
+        setInstrumentBool(gdaxSpotRadio, "gdaxSpot");
+        setInstrumentBool(binanceSpotRadio, "binanceSpot");
 
-        } else if (!bitmexPerpSwapRadio.isSelected() && bitmexPerpBool) {
-            bitmexPerpBool = false;
-            if (instruments.contains("bitmexPerp")) {
-                instruments.remove("bitmexPerp");
+        setInstrumentBool(bitmexJuneRadio, "bitmexJune");
+        setInstrumentBool(bitmexSeptRadio, "bitmexSept");
+
+        setInstrumentBool(okexThisWeekRadio, "okexThisWeek");
+        setInstrumentBool(okexNextWeekRadio, "okexNextWeek");
+        setInstrumentBool(okexQuarterlyRadio, "okexQuarterly");
+
+
+
+
+    }
+    private void setInstrumentBool(JRadioButton radio, String ins) {
+
+        if (radio.isSelected() && !instruments.contains(ins)) {
+
+            instruments.add(ins);
+
+        } else if (!radio.isSelected() && instruments.contains(ins)) {
+
+            if (instruments.contains(ins)) {
+                instruments.remove(ins);
             }
-        }
-
-        if (bitfinexSpotRadio.isSelected() && !bitfinexSpotBool) {
-            bitfinexSpotBool = true;
-        } else if (!bitfinexSpotRadio.isSelected() && bitfinexSpotBool) {
-            bitfinexSpotBool = false;
         }
 
     }
@@ -362,82 +379,110 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     @Override
     public void receiveBroadcast(String message) throws InterruptedException, IOException {
 
+        boolean side = (message.substring(message.indexOf("!")+1, message.indexOf("!#")).contains("Buy"));
+        String exchange = message.substring(message.indexOf("%") + 1, message.indexOf("%<"));
+        String instrument = message.substring(message.indexOf("<") + 1, message.indexOf(">!"));
+        System.out.println(instrument);
+        System.out.println("in array: " + instruments.toString());
+        final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
 
-        if (message.contains("bitmex")) {
-
-            System.out.println(message);
-
-            boolean side = (message.substring(message.indexOf("!")+1, message.indexOf("!#")).contains("Buy"));
-            String instrument = message.substring(message.indexOf("<")+1, message.indexOf(">!"));
-            System.out.println(instrument);
-            System.out.println("in array: " + instruments.toString());
-            final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
-
-            System.out.println(instruments.contains(instrument));
+        System.out.println(instruments.contains(instrument));
 
 
-            if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
-                EventQueue.invokeLater(() -> {
+        if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
+            EventQueue.invokeLater(() -> {
 
-                    orders.add(0, new MarketOrder("bitmex", size, 5));
+                orders.add(0, new MarketOrder(exchange, size, 5));
 
-                    if (orders.size() > 100) {
-                        orders.remove(orders.size()-1);
-                        orders.remove(orders.size()-1);
-                        orders.remove(orders.size()-1);
-                    }
+                if (orders.size() > 100) {
+                    orders.remove(orders.size() - 1);
+                    orders.remove(orders.size() - 1);
+                    orders.remove(orders.size() - 1);
+                }
 
-                    //maybe remove some of these
-                    revalidate();
-                    tradesTable.revalidate();
-                    tradesScrollPane.revalidate();
-                });
-            }
-
-        } else if (message.contains("bitmexliq")) {
-
-//            Toolkit.getDefaultToolkit().beep();
-
-            boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("Buy"));
-            double amount = Double.parseDouble(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
-            System.out.println("liq amount: " + amount);
-
-            double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.indexOf("@*")));
-            String action = String.valueOf(message.substring(message.indexOf("*") + 1, message.indexOf("*^")));
-
-            String id = String.valueOf(message.substring(message.indexOf("^") + 1, message.indexOf("^_")));
-
-//            if (action.contains("insert")) {
-//                addLiq(new TradeUni("bitmex", Formatter.kFormat(amount, 0) + "", amount, side, price, "time", id));
-//            } else if (action.contains("update")) {
-//                updateLiq(new TradeUni("bitmex", "", amount, side, price, "time", id));
-        } else if (message.contains("bitfinex")) {
-
-
-            System.out.println(message);
-            boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("true"));
-            final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
-
-            System.out.println("new bitfinex trade " + size);
-
-            if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt) {
-
-                EventQueue.invokeLater(() -> {
-
-                    orders.add(0, new MarketOrder("bitfinex", size, 5));
-
-                    //maybe remove some of these
-                    revalidate();
-                    tradesTable.revalidate();
-                    tradesScrollPane.revalidate();
-                });
-            }
-
-
-        } else if (message.contains("bitmex") || message.contains("okex") || message.contains("binance") || message.contains("gdax")) {
-//            addTradeData(message, message.substring(0, 1).equals("u"));
-
+                //maybe remove some of these
+                revalidate();
+                tradesTable.revalidate();
+                tradesScrollPane.revalidate();
+            });
         }
+
+
+//        if (message.contains("bitmex")) {
+//
+//            System.out.println(message);
+//
+//            boolean side = (message.substring(message.indexOf("!")+1, message.indexOf("!#")).contains("Buy"));
+//            String instrument = message.substring(message.indexOf("<")+1, message.indexOf(">!"));
+//            System.out.println(instrument);
+//            System.out.println("in array: " + instruments.toString());
+//            final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
+//
+//            System.out.println(instruments.contains(instrument));
+//
+//
+//            if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
+//                EventQueue.invokeLater(() -> {
+//
+//                    orders.add(0, new MarketOrder("bitmex", size, 5));
+//
+//                    if (orders.size() > 100) {
+//                        orders.remove(orders.size()-1);
+//                        orders.remove(orders.size()-1);
+//                        orders.remove(orders.size()-1);
+//                    }
+//
+//                    //maybe remove some of these
+//                    revalidate();
+//                    tradesTable.revalidate();
+//                    tradesScrollPane.revalidate();
+//                });
+//            }
+//
+//        } else if (message.contains("bitmexliq")) {
+//
+////            Toolkit.getDefaultToolkit().beep();
+//
+//            boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("Buy"));
+//            double amount = Double.parseDouble(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
+//            System.out.println("liq amount: " + amount);
+//
+//            double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.indexOf("@*")));
+//            String action = String.valueOf(message.substring(message.indexOf("*") + 1, message.indexOf("*^")));
+//
+//            String id = String.valueOf(message.substring(message.indexOf("^") + 1, message.indexOf("^_")));
+//
+////            if (action.contains("insert")) {
+////                addLiq(new TradeUni("bitmex", Formatter.kFormat(amount, 0) + "", amount, side, price, "time", id));
+////            } else if (action.contains("update")) {
+////                updateLiq(new TradeUni("bitmex", "", amount, side, price, "time", id));
+//        } else if (message.contains("bitfinex")) {
+//
+//
+//            System.out.println(message);
+//            boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("true"));
+//            final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
+//
+//            System.out.println("new bitfinex trade " + size);
+//
+//            if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt) {
+//
+//                EventQueue.invokeLater(() -> {
+//
+//                    orders.add(0, new MarketOrder("bitfinex", size, 5));
+//
+//                    //maybe remove some of these
+//                    revalidate();
+//                    tradesTable.revalidate();
+//                    tradesScrollPane.revalidate();
+//                });
+//            }
+//
+//
+//        } else if (message.contains("bitmex") || message.contains("okex") || message.contains("binance") || message.contains("gdax")) {
+////            addTradeData(message, message.substring(0, 1).equals("u"));
+//
+//        }
     }
 
     public void setMinimumAmt(String minimumAmt) {
