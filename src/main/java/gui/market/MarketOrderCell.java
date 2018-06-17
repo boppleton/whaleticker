@@ -1,45 +1,36 @@
-package gui;
+package gui.market;
+
+import gui.market.MarketOrder;
+import websocket.Formatter;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 public class MarketOrderCell extends AbstractCellEditor implements TableCellRenderer {
 
-    JPanel panel;
-    JLabel text;
+    private JPanel panel;
+    private JLabel text;
 
+    private MarketOrder order;
 
-    MarketOrder order;
-
-    public MarketOrderCell() {
+    MarketOrderCell() {
 
         text = new JLabel();
 
-
         panel = new JPanel(new BorderLayout());
-
-        ImageIcon icon = new ImageIcon(getClass().getResource("/bitmex22.png"));
-        text.setIcon(icon);
 
         panel.add(text, BorderLayout.PAGE_START);
 
-    }
-
-    public Component getTableCellRendererComponent(JTable table, Object value,
-                                                   boolean isSelected, boolean hasFocus, int row, int column) {
-        MarketOrder order = (MarketOrder)value;
-        updateData(order, isSelected, table);
-        return panel;
     }
 
 
     private void updateData(MarketOrder order, boolean isSelected, JTable table) {
         this.order = order;
 
-        text.setText(coolFormat((double) order.amt, 0));
+        text.setIcon(getIcon(order.exchange));
+
+        text.setText(Formatter.kFormat((double) order.amt, 0));
 
         panel.setBackground(getColor(order.amt));
 
@@ -55,13 +46,12 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
             text.setForeground(Color.BLACK);
             text.setFont(new Font(null, Font.PLAIN, 15));
 
-        }else if (orderAmt < 500000) {
+        } else if (orderAmt < 500000) {
             panel.setBorder(null);
             text.setForeground(Color.BLACK);
             text.setFont(new Font(null, Font.PLAIN, 15));
 
-        }
-        else if (orderAmt < 1000000) {
+        } else if (orderAmt < 1000000) {
             panel.setBorder(null);
             text.setForeground(Color.WHITE);
             text.setFont(new Font(null, Font.CENTER_BASELINE, 17));
@@ -72,16 +62,47 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
             text.setFont(new Font(null, Font.BOLD, 17));
         }
 
-//        if (isSelected) {
-//            panel.setBorder(BorderFactory.createLineBorder(Color.CYAN, 2, true));
-//        } else {
-//            panel.setBorder(null);
-//        }
+        if (isSelected) {
+            panel.setBorder(BorderFactory.createLineBorder(Color.blue, 1, true));
+        } else {
+            panel.setBorder(null);
+        }
+    }
+
+    private Icon getIcon(String exchange) {
+
+        ImageIcon icon = null;
+
+        switch (exchange) {
+            case "bitmex":
+                icon = new ImageIcon(getClass().getResource("/bitmex22.png"));
+                break;
+            case "bitfinex":
+                icon = new ImageIcon(getClass().getResource("/bitfinex22.png"));
+                break;
+            case "okex":
+                icon = new ImageIcon(getClass().getResource("/okex22.png"));
+                break;
+            case "binance":
+                icon = new ImageIcon(getClass().getResource("/whale25.png"));
+                break;
+            case "gdax":
+                icon = new ImageIcon(getClass().getResource("/gdax22.png"));
+                break;
+        }
+
+        return icon;
+
     }
 
     @Override
     public Object getCellEditorValue() {
         return null;
+    }
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        MarketOrder order = (MarketOrder) value;
+        updateData(order, isSelected, table);
+        return panel;
     }
 
     private static Color getColor(int amt) {
@@ -103,18 +124,5 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
     }
 
-    //usd text format for k and mil.  from S.O. i did not make this, must have been some sort of high wizard
-    private static String coolFormat(double n, int iteration) {
-
-        String[] c = new String[]{"k", "mil"};
-
-        double d = ((long) n / 100) / 10.0;
-        boolean isRound = (d * 10) % 10 == 0;//true if the decimal part is equal to 0 (then it's trimmed anyway)
-        return (d < 1000 ? //this determines the class, i.e. 'k', 'm' etc
-                ((d > 99.9 || isRound || (!isRound && d > 9.99) ? //this decides whether to trim the decimals
-                        (int) d * 10 / 10 : d + "" // (int) d * 10 / 10 drops the decimal
-                ) + "" + c[iteration])
-                : coolFormat(d, iteration + 1));
-    }
 
 }

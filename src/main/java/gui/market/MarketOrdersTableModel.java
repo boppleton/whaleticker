@@ -1,4 +1,6 @@
-package gui;
+package gui.market;
+
+import gui.market.MarketOrder;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
