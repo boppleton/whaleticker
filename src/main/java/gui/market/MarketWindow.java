@@ -32,52 +32,37 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     private int minimumTradeAmt = 100;
     private int maxTradeAmt = 999999999;
 
+    private ArrayList<String> instruments = new ArrayList<>();
+    private JRadioButton bitmexPerpSwapRadio;
+    private boolean bitmexPerpBool;
+    private JRadioButton bitfinexSpotRadio;
+    private boolean bitfinexSpotBool;
+    private JRadioButton okexSpotRadio;
+    private boolean okexSpotBool;
+    private JRadioButton gdaxSpotRadio;
+    private boolean gdaxSpotBool;
+    private JRadioButton binanceSpotRadio;
+    private boolean binanceSpotBool;
+    private JRadioButton bitmexJuneRadio;
+    private boolean bitmexJuneBool;
+    private JRadioButton bitmexSeptRadio;
+    private boolean bitmexSeptBool;
+    private JRadioButton okexThisWeekRadio;
+    private boolean okexThisWeekBool;
+    private JRadioButton okexNextWeekRadio;
+    private boolean okexNextWeeBool;
+    private JRadioButton okexQuarterlyRadio;
+    private boolean okexQuarterlyBool;
 
     public MarketWindow(String title) {
         super(title);
 
         Broadcaster.register(this);
 
-        orders = new ArrayList();
+        orders = new ArrayList(10);
         orders.add(new MarketOrder("bitmex", 9000, 3));
         orders.add(new MarketOrder("bitmex", 80000, 3));
-        orders.add(new MarketOrder("bitmex", 300000, 3));
-        orders.add(new MarketOrder("bitfinex", 700000, 3));
-        orders.add(new MarketOrder("bitfinex", 1100000, 3));
-        orders.add(new MarketOrder("bitfinex", 90000, 3));
-        orders.add(new MarketOrder("bitfinex", 500, 3));
-        orders.add(new MarketOrder("bitmex", 200, 3));
-        orders.add(new MarketOrder("bitmex", 300, 3));
-        orders.add(new MarketOrder("bitmex", 100, 3));
-        orders.add(new MarketOrder("bitmex", -500, 3));
-        orders.add(new MarketOrder("bitmex", -500, 3));
-        orders.add(new MarketOrder("bitmex", -800, 3));
-        orders.add(new MarketOrder("bitmex", -900, 3));
-        orders.add(new MarketOrder("bitmex", -980, 3));
-        orders.add(new MarketOrder("bitmex", 2000, 3));
-        orders.add(new MarketOrder("bitmex", 5000, 3));
-        orders.add(new MarketOrder("bitmex", 5000, 3));
-        orders.add(new MarketOrder("bitmex", 7000, 3));
-        orders.add(new MarketOrder("bitmex", 9000, 3));
-        orders.add(new MarketOrder("bitmex", -500, 3));
-        orders.add(new MarketOrder("bitmex", -2000, 3));
-        orders.add(new MarketOrder("bitmex", -5000, 3));
-        orders.add(new MarketOrder("bitmex", -5000, 3));
-        orders.add(new MarketOrder("bitmex", -7000, 3));
-        orders.add(new MarketOrder("bitmex", -9000, 3));
-        orders.add(new MarketOrder("bitmex", 25000, 3));
-        orders.add(new MarketOrder("bitmex", 100000, 3));
-        orders.add(new MarketOrder("bitmex", 100000, 3));
-        orders.add(new MarketOrder("bitmex", -100000, 3));
-        orders.add(new MarketOrder("bitmex", -100000, 3));
-        orders.add(new MarketOrder("bitmex", 1400000, 3));
-        orders.add(new MarketOrder("bitmex", 2100000, 3));
-        orders.add(new MarketOrder("bitmex", 4100000, 3));
-        orders.add(new MarketOrder("bitmex", -1400000, 3));
-        orders.add(new MarketOrder("bitmex", -1100000, 3));
-        orders.add(new MarketOrder("bitmex", 600000, 3));
-        orders.add(new MarketOrder("bitmex", 700000, 3));
-        orders.add(new MarketOrder("bitmex", 900000, 3));
+
 
 
         tradesTable = new JTable(new MarketOrdersTableModel(orders));
@@ -155,40 +140,141 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         settingsPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
+        JPanel spotPanel = new JPanel(new GridBagLayout());
+        spotPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.white, 0), "spot"));
+
         gbc.gridx = 0;
         gbc.gridy = 0;
-        JLabel minLabel = new JLabel("minimum");
-        settingsPanel.add(minLabel, gbc);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        bitmexPerpSwapRadio = new JRadioButton("bitmex perp swap", bitmexPerpBool);
+        spotPanel.add(bitmexPerpSwapRadio, gbc);
+
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        JTextField minimumAmount = new JTextField(Formatter.amountFormat(minimumTradeAmt), 5);
-        settingsPanel.add(minimumAmount, gbc);
+        bitfinexSpotRadio = new JRadioButton("bitfinex spot", bitfinexSpotBool);
+        spotPanel.add(bitfinexSpotRadio, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        JLabel maxLabel = new JLabel("maximum");
-        settingsPanel.add(maxLabel, gbc);
+        okexSpotRadio = new JRadioButton("okex spot", okexSpotBool);
+        spotPanel.add(okexSpotRadio, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        JTextField maxAmount = new JTextField(maxTradeAmt == 999999999 ? "∞" : Formatter.amountFormat(maxTradeAmt), 5);
-        settingsPanel.add(maxAmount, gbc);
-
-
+        gdaxSpotRadio = new JRadioButton("gdax spot", gdaxSpotBool);
+        spotPanel.add(gdaxSpotRadio, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 4;
-        JRadioButton alwaysOnTopRadio = new JRadioButton("always on top");
-        alwaysOnTopRadio.setSelected(alwaysOnTop);
-        settingsPanel.add(alwaysOnTopRadio, gbc);
+        binanceSpotRadio = new JRadioButton("binance spot", binanceSpotBool);
+        spotPanel.add(binanceSpotRadio, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        settingsPanel.add(spotPanel, gbc);
+
+
+        JPanel futuresPanel = new JPanel(new GridBagLayout());
+        futuresPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.white, 0), "futures"));
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        bitmexJuneRadio = new JRadioButton("bitmex june futures", bitmexJuneBool);
+        futuresPanel.add(bitmexJuneRadio, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        bitmexSeptRadio = new JRadioButton("bitmex september futures", bitmexSeptBool);
+        futuresPanel.add(bitmexSeptRadio, gbc);
+
 
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 2;
+        okexThisWeekRadio = new JRadioButton("okex this week futures", okexThisWeekBool);
+        futuresPanel.add(okexThisWeekRadio, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        okexNextWeekRadio = new JRadioButton("okex next week futures", okexNextWeeBool);
+        futuresPanel.add(okexNextWeekRadio, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        okexQuarterlyRadio = new JRadioButton("okex quarterly futures", okexQuarterlyBool);
+        futuresPanel.add(okexQuarterlyRadio, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+//        gbc.anchor = GridBagConstraints.CENTER;
+        settingsPanel.add(futuresPanel, gbc);
+
+
+
+
+        JPanel tradeSizePanel = new JPanel(new GridBagLayout());
+        tradeSizePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.white, 0), "trade size"));
+
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        JLabel minLabel = new JLabel("minimum");
+        tradeSizePanel.add(minLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        JTextField minimumAmount = new JTextField(Formatter.amountFormat(minimumTradeAmt), 5);
+        tradeSizePanel.add(minimumAmount, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        JLabel maxLabel = new JLabel("maximum");
+        tradeSizePanel.add(maxLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        JTextField maxAmount = new JTextField(maxTradeAmt == 999999999 ? "∞" : Formatter.amountFormat(maxTradeAmt), 5);
+        tradeSizePanel.add(maxAmount, gbc);
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        settingsPanel.add(tradeSizePanel, gbc);
+
+
+
+
+        JPanel setPanel = new JPanel(new GridBagLayout());
+        setPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.white, 0), "settings"));
+
+
+
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        JRadioButton alwaysOnTopRadio = new JRadioButton("always on top");
+        alwaysOnTopRadio.setSelected(alwaysOnTop);
+        setPanel.add(alwaysOnTopRadio, gbc);
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
         JRadioButton hideFrameRadio = new JRadioButton("hide frame");
         hideFrameRadio.setSelected(hideFrame);
-        settingsPanel.add(hideFrameRadio, gbc);
+        setPanel.add(hideFrameRadio, gbc);
+
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        settingsPanel.add(setPanel, gbc);
 
 
 
@@ -207,8 +293,31 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 
             setMaximumAmount(maxAmount.getText());
 
+            setInstruments();
+
 
         }
+    }
+
+    private void setInstruments() {
+
+        if (bitmexPerpSwapRadio.isSelected() && !bitmexPerpBool) {
+            bitmexPerpBool = true;
+            instruments.add("bitmexPerp");
+
+        } else if (!bitmexPerpSwapRadio.isSelected() && bitmexPerpBool) {
+            bitmexPerpBool = false;
+            if (instruments.contains("bitmexPerp")) {
+                instruments.remove("bitmexPerp");
+            }
+        }
+
+        if (bitfinexSpotRadio.isSelected() && !bitfinexSpotBool) {
+            bitfinexSpotBool = true;
+        } else if (!bitfinexSpotRadio.isSelected() && bitfinexSpotBool) {
+            bitfinexSpotBool = false;
+        }
+
     }
 
     private void setShowFrame(boolean radio) {
@@ -256,12 +365,27 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 
         if (message.contains("bitmex")) {
 
-            boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("Buy"));
+            System.out.println(message);
+
+            boolean side = (message.substring(message.indexOf("!")+1, message.indexOf("!#")).contains("Buy"));
+            String instrument = message.substring(message.indexOf("<")+1, message.indexOf(">!"));
+            System.out.println(instrument);
+            System.out.println("in array: " + instruments.toString());
             final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
 
-            if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt) {
+            System.out.println(instruments.contains(instrument));
+
+
+            if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
                 EventQueue.invokeLater(() -> {
+
                     orders.add(0, new MarketOrder("bitmex", size, 5));
+
+                    if (orders.size() > 100) {
+                        orders.remove(orders.size()-1);
+                        orders.remove(orders.size()-1);
+                        orders.remove(orders.size()-1);
+                    }
 
                     //maybe remove some of these
                     revalidate();
