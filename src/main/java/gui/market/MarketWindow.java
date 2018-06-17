@@ -15,6 +15,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class MarketWindow extends JFrame implements Broadcaster.BroadcastListener {
@@ -50,8 +51,8 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         Broadcaster.register(this);
 
         orders = new ArrayList(10);
-        orders.add(new MarketOrder("bitmex", "bitmexPerp", 9000, 3));
-        orders.add(new MarketOrder("bitmex", "bitmexJune", 80000, 3));
+        orders.add(new MarketOrder("bitmex", "bitmexPerp", 9000, 3, 8900, 9000));
+        orders.add(new MarketOrder("bitmex", "bitmexJune", 80000, 3, 8998, 9000));
 
 
         setupTableScrollpane();
@@ -381,10 +382,19 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 
         if (!message.contains("liq")) {
 
+            System.out.println(message);
+
 
             boolean side = (message.substring(message.indexOf("!") + 1, message.indexOf("!#")).contains("Buy"));
             String exchange = message.substring(message.indexOf("%") + 1, message.indexOf("%<"));
             String instrument = message.substring(message.indexOf("<") + 1, message.indexOf(">!"));
+            double firstPrice = Double.valueOf(message.substring(message.indexOf("~") + 1, message.indexOf("~=")));
+            double lastPrice = Double.valueOf(message.substring(message.indexOf("=") + 1, message.indexOf("=+")));
+
+            int slip = (int)(lastPrice-firstPrice);
+
+
+
             System.out.println(instrument);
             System.out.println("in array: " + instruments.toString());
             final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
@@ -395,7 +405,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
             if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
                 EventQueue.invokeLater(() -> {
 
-                    orders.add(0, new MarketOrder(exchange, instrument, size, 5));
+                    orders.add(0, new MarketOrder(exchange, instrument, size, slip, firstPrice, lastPrice ));
 
                     if (orders.size() > 100) {
                         orders.remove(orders.size() - 1);
@@ -428,7 +438,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 
     public void setMaximumAmount(String maximumAmount) {
 
-        if (!maximumAmount.equals("∞") && !maximumAmount.equals("0")) {
+        if (!maximumAmount.equals("∞") && !maximumAmount.equals("0") && !maximumAmount.equals("")) {
             try {
 
                 String maxString = maximumAmount.replaceAll("\\D", "");

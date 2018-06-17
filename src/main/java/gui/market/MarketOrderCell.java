@@ -12,6 +12,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
     private JPanel panel;
     private JLabel text;
     private JLabel instrument;
+    private JLabel slip;
 
     private MarketOrder order;
 
@@ -22,9 +23,14 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
         instrument.setForeground(Color.GRAY);
         instrument.setFont(new Font(null, Font.ITALIC, 12));
 
+        slip = new JLabel();
+        slip.setForeground(Color.BLACK);
+        slip.setFont(new Font(null, Font.BOLD, 14));
+
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
         panel.add(text);
+        panel.add(slip);
         panel.add(instrument);
 
 
@@ -37,8 +43,9 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
         text.setIcon(getIcon(order.exchange));
 
         setInstrument(order);
+        setSlip(order);
 
-        text.setText(Formatter.kFormat((double) Math.abs(order.amt), 0));
+        text.setText(Formatter.kFormat((double) Math.abs(order.amt), 0) + " ");
 
 
 
@@ -48,8 +55,13 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
         if (orderAmt < 1000) {
             panel.setBorder(null);
-            text.setForeground(Color.BLACK);
+            text.setForeground(Color.GRAY);
             text.setFont(new Font(null, Font.ITALIC, 12));
+
+        } else if (orderAmt < 10000) {
+            panel.setBorder(null);
+            text.setForeground(Color.DARK_GRAY);
+            text.setFont(new Font(null, Font.ITALIC, 13));
 
         } else if (orderAmt < 100000) {
             panel.setBorder(null);
@@ -59,7 +71,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
         } else if (orderAmt < 500000) {
             panel.setBorder(null);
             text.setForeground(Color.BLACK);
-            text.setFont(new Font(null, Font.PLAIN, 15));
+            text.setFont(new Font(null, Font.PLAIN, 17));
 
         } else if (orderAmt < 1000000) {
             panel.setBorder(null);
@@ -72,6 +84,23 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
             text.setFont(new Font(null, Font.BOLD, 17));
         }
 
+    }
+
+    private void setSlip(MarketOrder order) {
+
+        if (Math.abs(order.slip) >= 1) {
+
+            slip.setText(String.valueOf(Math.abs(order.slip)) + " - " + order.lastPrice);
+
+            if (order.slip > 0) {
+                slip.setIcon(new ImageIcon(getClass().getResource("/uparrow.png")));
+            } else {
+                slip.setIcon(new ImageIcon(getClass().getResource("/downarrow.png")));
+            }
+        } else {
+            slip.setText("");
+            slip.setIcon(null);
+        }
     }
 
     private void setInstrument(MarketOrder order) {

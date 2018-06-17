@@ -114,7 +114,7 @@ public class BitmexClient extends Client {
             double lasttPrice = tradeData.get(tradeData.size()-1).getPrice();
 
             if (total >= 100) {
-                Broadcaster.broadcast( "%" + "bitmex" + "%<" + getInstrument(tradeData.get(0)) + ">!" + (tradeData.get(0).getSide().equals("Buy")) + "!#" + (tradeData.get(0).getSide().equals("Sell") ? "-" : "") + total + "#@" + tradeData.get(0).getPrice() + "@*" + tradeData.get(0).getTimestamp() + "*~" + firstPrice + "~=" + lasttPrice + "=");
+                Broadcaster.broadcast( "%" + "bitmex" + "%<" + getInstrument(tradeData.get(0)) + ">!" + (tradeData.get(0).getSide().equals("Buy")) + "!#" + (tradeData.get(0).getSide().equals("Sell") ? "-" : "") + total + "#@" + tradeData.get(0).getPrice() + "@*" + tradeData.get(0).getTimestamp() + "*~" + firstPrice + "~=" + lasttPrice + "=+");
             }
 
             lastPrice = tradeData.get(tradeData.size()-1).getPrice();
