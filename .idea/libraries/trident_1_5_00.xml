@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="trident-1.5.00">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/lib/trident-1.5.00.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
