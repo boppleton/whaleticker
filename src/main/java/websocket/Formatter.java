@@ -4,6 +4,10 @@ public class Formatter {
 
     public static String kFormat(double n, int iteration) {
 
+        if (n < 1000) {
+            return lowFormat(n);
+        }
+
         String[] c = new String[]{"k", "mil"};
 
         double d = ((long) n / 100) / 10.0;

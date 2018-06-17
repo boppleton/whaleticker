@@ -30,7 +30,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
         text.setIcon(getIcon(order.exchange));
 
-        text.setText(Formatter.kFormat((double) order.amt, 0));
+        text.setText(Formatter.kFormat((double) Math.abs(order.amt), 0));
 
         panel.setBackground(getColor(order.amt));
 

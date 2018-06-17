@@ -3,15 +3,22 @@ package gui.market;
 import gui.market.MarketOrder;
 import gui.market.MarketOrderCell;
 import gui.market.MarketOrdersTableModel;
+import websocket.Broadcaster;
+import websocket.TradeUni;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class MarketWindow extends JFrame {
+public class MarketWindow extends JFrame implements Broadcaster.BroadcastListener {
+
+    private ArrayList orders;
 
     private JScrollPane tradesScrollPane;
     private JTable tradesTable;
@@ -24,7 +31,9 @@ public class MarketWindow extends JFrame {
     public MarketWindow(String title) {
         super(title);
 
-        ArrayList orders = new ArrayList();
+        Broadcaster.register(this);
+
+        orders = new ArrayList();
         orders.add(new MarketOrder("bitmex", 9000, 3));
         orders.add(new MarketOrder("bitmex", 80000, 3));
         orders.add(new MarketOrder("bitmex", 300000, 3));
@@ -95,6 +104,16 @@ public class MarketWindow extends JFrame {
         });
 
         tradesScrollPane = new JScrollPane(tradesTable);
+        tradesScrollPane.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                if(tradesScrollPane.getVerticalScrollBar().getValue() == 0) {
+                    tradesScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+                } else {
+                    tradesScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
+                }
+            }
+        });
         tradesScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
         tradesScrollPane.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
@@ -219,5 +238,52 @@ public class MarketWindow extends JFrame {
 
         });
 
+    }
+
+    @Override
+    public void receiveBroadcast(String message) throws InterruptedException, IOException {
+
+
+
+        if (message.contains("bitmex")) {
+
+            boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("Buy"));
+            final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
+
+            System.out.println("new bitmex trade " + size);
+
+            EventQueue.invokeLater(() -> {
+
+
+                orders.add(0, new MarketOrder("bitmex", size, 5));
+
+                //maybe remove some of these
+                revalidate();
+                tradesTable.revalidate();
+                tradesScrollPane.revalidate();
+            });
+
+        } else if (message.contains("bitmexliq")) {
+
+//            Toolkit.getDefaultToolkit().beep();
+
+            boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("Buy"));
+            double amount = Double.parseDouble(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
+            System.out.println("liq amount: " + amount);
+
+            double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.indexOf("@*")));
+            String action = String.valueOf(message.substring(message.indexOf("*") + 1, message.indexOf("*^")));
+
+            String id = String.valueOf(message.substring(message.indexOf("^") + 1, message.indexOf("^_")));
+
+//            if (action.contains("insert")) {
+//                addLiq(new TradeUni("bitmex", Formatter.kFormat(amount, 0) + "", amount, side, price, "time", id));
+//            } else if (action.contains("update")) {
+//                updateLiq(new TradeUni("bitmex", "", amount, side, price, "time", id));
+        } else if (message.contains("bitfinex") || message.contains("bitmex") || message.contains("okex") || message.contains("binance") || message.contains("gdax")) {
+//            addTradeData(message, message.substring(0, 1).equals("u"));
+
+
+        }
     }
 }
