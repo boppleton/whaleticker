@@ -43,6 +43,8 @@ public class BitfinexClient extends Client {
     @Override
     public void onMessage(String message) {
 
+        System.out.println(message);
+
         if (message.contains("te")) {
 
             onMessageTrade(message);
@@ -69,9 +71,6 @@ public class BitfinexClient extends Client {
         TradeExecuted te = null;
 
         try {
-
-//            System.out.println("\n\n" + message);
-
 
 
             te = mapper.readValue(message, TradeExecuted.class);

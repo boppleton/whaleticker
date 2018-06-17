@@ -62,11 +62,6 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
             text.setFont(new Font(null, Font.BOLD, 17));
         }
 
-        if (isSelected) {
-            panel.setBorder(BorderFactory.createLineBorder(Color.blue, 1, true));
-        } else {
-            panel.setBorder(null);
-        }
     }
 
     private Icon getIcon(String exchange) {

@@ -4,6 +4,7 @@ import gui.market.MarketOrder;
 import gui.market.MarketOrderCell;
 import gui.market.MarketOrdersTableModel;
 import websocket.Broadcaster;
+import websocket.Formatter;
 import websocket.TradeUni;
 
 import javax.swing.*;
@@ -27,6 +28,10 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     private boolean alwaysOnTop = false;
     private boolean hideFrame = false;
     private boolean showScrollbar = false;
+
+    private int minimumTradeAmt = 100;
+    private int maxTradeAmt = 999999999;
+
 
     public MarketWindow(String title) {
         super(title);
@@ -107,7 +112,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         tradesScrollPane.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                if(tradesScrollPane.getVerticalScrollBar().getValue() == 0) {
+                if (tradesScrollPane.getVerticalScrollBar().getValue() == 0) {
                     tradesScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
                 } else {
                     tradesScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
@@ -152,21 +157,40 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        JRadioButton hideFrameRadio = new JRadioButton("hide frame");
-        hideFrameRadio.setSelected(hideFrame);
-        settingsPanel.add(hideFrameRadio, gbc);
+        JLabel minLabel = new JLabel("minimum");
+        settingsPanel.add(minLabel, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
+        JTextField minimumAmount = new JTextField(Formatter.amountFormat(minimumTradeAmt), 5);
+        settingsPanel.add(minimumAmount, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        JLabel maxLabel = new JLabel("maximum");
+        settingsPanel.add(maxLabel, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        JTextField maxAmount = new JTextField(maxTradeAmt == 999999999 ? "∞" : Formatter.amountFormat(maxTradeAmt), 5);
+        settingsPanel.add(maxAmount, gbc);
+
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
         JRadioButton alwaysOnTopRadio = new JRadioButton("always on top");
         alwaysOnTopRadio.setSelected(alwaysOnTop);
         settingsPanel.add(alwaysOnTopRadio, gbc);
 
+
         gbc.gridx = 0;
-        gbc.gridy = 2;
-        JRadioButton showScrollbarRadio = new JRadioButton("show scrollbar");
-        showScrollbarRadio.setSelected(showScrollbar);
-        settingsPanel.add(showScrollbarRadio, gbc);
+        gbc.gridy = 5;
+        JRadioButton hideFrameRadio = new JRadioButton("hide frame");
+        hideFrameRadio.setSelected(hideFrame);
+        settingsPanel.add(hideFrameRadio, gbc);
+
+
 
 
         int result = JOptionPane.showConfirmDialog(null, settingsPanel, "config", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -179,7 +203,10 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 
             setShowFrame(hideFrameRadio.isSelected());
 
-            setShowScrollbar(showScrollbarRadio.isSelected());
+            setMinimumAmt(minimumAmount.getText());
+
+            setMaximumAmount(maxAmount.getText());
+
 
         }
     }
@@ -222,27 +249,9 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         });
     }
 
-    private void setShowScrollbar(boolean radio) {
-
-        EventQueue.invokeLater(() -> {
-
-            if (radio && !showScrollbar) {
-                tradesScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
-                showScrollbar = true;
-            } else if (!radio && showScrollbar) {
-                tradesScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
-                showScrollbar = false;
-            }
-
-            tradesScrollPane.revalidate();
-
-        });
-
-    }
 
     @Override
     public void receiveBroadcast(String message) throws InterruptedException, IOException {
-
 
 
         if (message.contains("bitmex")) {
@@ -250,18 +259,16 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
             boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("Buy"));
             final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
 
-            System.out.println("new bitmex trade " + size);
+            if (size >= minimumTradeAmt && size <= maxTradeAmt) {
+                EventQueue.invokeLater(() -> {
+                    orders.add(0, new MarketOrder("bitmex", size, 5));
 
-            EventQueue.invokeLater(() -> {
-
-
-                orders.add(0, new MarketOrder("bitmex", size, 5));
-
-                //maybe remove some of these
-                revalidate();
-                tradesTable.revalidate();
-                tradesScrollPane.revalidate();
-            });
+                    //maybe remove some of these
+                    revalidate();
+                    tradesTable.revalidate();
+                    tradesScrollPane.revalidate();
+                });
+            }
 
         } else if (message.contains("bitmexliq")) {
 
@@ -280,10 +287,62 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 //                addLiq(new TradeUni("bitmex", Formatter.kFormat(amount, 0) + "", amount, side, price, "time", id));
 //            } else if (action.contains("update")) {
 //                updateLiq(new TradeUni("bitmex", "", amount, side, price, "time", id));
-        } else if (message.contains("bitfinex") || message.contains("bitmex") || message.contains("okex") || message.contains("binance") || message.contains("gdax")) {
+        } else if (message.contains("bitfinex")) {
+
+
+            System.out.println(message);
+            boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("true"));
+            final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
+
+            System.out.println("new bitfinex trade " + size);
+            
+            if (size >= minimumTradeAmt && size <= maxTradeAmt) {
+
+                EventQueue.invokeLater(() -> {
+
+
+                    orders.add(0, new MarketOrder("bitfinex", size, 5));
+
+                    //maybe remove some of these
+                    revalidate();
+                    tradesTable.revalidate();
+                    tradesScrollPane.revalidate();
+                });
+            }
+
+
+        } else if (message.contains("bitmex") || message.contains("okex") || message.contains("binance") || message.contains("gdax")) {
 //            addTradeData(message, message.substring(0, 1).equals("u"));
 
-
         }
+    }
+
+    public void setMinimumAmt(String minimumAmt) {
+        try {
+            String minString = minimumAmt.replaceAll("\\D", "");
+
+            int min = Integer.parseInt(minString);
+            this.minimumTradeAmt = min;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setMaximumAmount(String maximumAmount) {
+
+        if (!maximumAmount.equals("∞") && !maximumAmount.equals("0")) {
+            try {
+
+                String maxString = maximumAmount.replaceAll("\\D", "");
+
+                int max = Integer.parseInt(maxString);
+                this.maxTradeAmt = max;
+            } catch (Exception e) {
+                maxTradeAmt = 999999999;
+                e.printStackTrace();
+            }
+        }
+
+
     }
 }

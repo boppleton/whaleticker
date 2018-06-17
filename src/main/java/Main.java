@@ -14,11 +14,7 @@ import java.net.URISyntaxException;
 
 public class Main {
 
-    private static BitmexClient bitmexclient;
-    private static BitfinexClient bitfinexClient;
-    private static OkexClient okexClient;
-    private static BinanceClient binanceClient;
-    private static GdaxClient gdaxClient;
+
 
     public static void main(String[] args) throws URISyntaxException, InterruptedException {
 
@@ -26,9 +22,7 @@ public class Main {
 
         BroadcastListener broadcastListener = new BroadcastListener();
 
-        bitmexclient = new BitmexClient();
-        bitmexclient.connectBlocking();
-        bitmexclient.subscribe(true, "trade", "XBTUSD");
+
 
 
 
@@ -44,9 +38,14 @@ public class Main {
                     System.out.println("Substance Graphite failed to initialize");
                 }
 
-                LaunchWindow launchWindow = new LaunchWindow("whaleticker");
+                LaunchWindow launchWindow = null;
+                try {
+                    launchWindow = new LaunchWindow("whaleticker");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 launchWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //set X close
-                launchWindow.setSize(220, 170); //set dimensions
+                launchWindow.setSize(220, 300); //set dimensions
                 launchWindow.setLocationRelativeTo(null); //null makes it open in the center
                 launchWindow.setVisible(true); //show window
 

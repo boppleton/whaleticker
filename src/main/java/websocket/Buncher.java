@@ -13,7 +13,7 @@ public class Buncher {
 
     private static HashMap<String, String> msgs = new HashMap<>();
 
-    private static int minAmount;
+    private static int minAmount = 100;
 
     public Buncher() {
 
@@ -34,6 +34,7 @@ public class Buncher {
         thread = new Thread(() -> {
             try {
                 for (;;) {
+                    System.out.println("sending msgs - #" + msgs.size());
                     msgs.forEach((key, value) -> Broadcaster.broadcast(msgs.get(key)));
                     msgs.clear();
                     Thread.sleep( ran + 500);
@@ -47,6 +48,8 @@ public class Buncher {
     }
 
     public void addToBuncher(TradeUni trade) {
+
+        System.out.println("adding to buncher " + trade.getSize());
 
         //if no bunch start new one
         if (bunch == null) { newBunch(trade); }
@@ -89,12 +92,14 @@ public class Buncher {
         String msg = "";
 
         if (!updateExisting) {
-            msg = "%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!#" + bunch.getSize() + "#@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*~" + Buncher.bunch.getFirstPrice() + "~=" + bunch.getLastPrice() + "=";
+
+            msg = "%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!#" + (int) bunch.getSize() + "#@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*~" + Buncher.bunch.getFirstPrice() + "~=" + bunch.getLastPrice() + "=";
+            System.out.println("adding msg " + msg);
             msgs.put(bunch.getTimestamp(), msg);
 
         } else if (updateExisting) {
-            msg = "%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!#" + bunch.getSize() + "#@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*~" + Buncher.bunch.getFirstPrice() + "~=" + bunch.getLastPrice() + "=";
-
+            msg = "%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!#" + (int) bunch.getSize() + "#@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*~" + Buncher.bunch.getFirstPrice() + "~=" + bunch.getLastPrice() + "=";
+            System.out.println("updating msg " + msg);
             msgs.remove(bunch.getTimestamp());
             msgs.put(bunch.getTimestamp(), msg);
 

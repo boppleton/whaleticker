@@ -1,5 +1,8 @@
 package websocket;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class Formatter {
 
     public static String kFormat(double n, int iteration) {
@@ -22,5 +25,10 @@ public class Formatter {
     public static String lowFormat(double size) {
 
         return String.format("%.0f", Math.rint(size));
+    }
+
+    public static String amountFormat(int minimumTradeAmt) {
+
+        return NumberFormat.getNumberInstance(Locale.getDefault()).format(minimumTradeAmt);
     }
 }
