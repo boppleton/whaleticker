@@ -259,7 +259,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
             boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("Buy"));
             final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
 
-            if (size >= minimumTradeAmt && size <= maxTradeAmt) {
+            if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt) {
                 EventQueue.invokeLater(() -> {
                     orders.add(0, new MarketOrder("bitmex", size, 5));
 
@@ -295,11 +295,10 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
             final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
 
             System.out.println("new bitfinex trade " + size);
-            
-            if (size >= minimumTradeAmt && size <= maxTradeAmt) {
+
+            if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt) {
 
                 EventQueue.invokeLater(() -> {
-
 
                     orders.add(0, new MarketOrder("bitfinex", size, 5));
 
