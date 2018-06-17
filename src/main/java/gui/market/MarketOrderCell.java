@@ -11,16 +11,22 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
     private JPanel panel;
     private JLabel text;
+    private JLabel instrument;
 
     private MarketOrder order;
 
     MarketOrderCell() {
 
         text = new JLabel();
+        instrument = new JLabel();
+        instrument.setForeground(Color.GRAY);
+        instrument.setFont(new Font(null, Font.ITALIC, 12));
 
-        panel = new JPanel(new BorderLayout());
+        panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+        panel.add(text);
+        panel.add(instrument);
 
-        panel.add(text, BorderLayout.PAGE_START);
 
     }
 
@@ -30,7 +36,11 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
         text.setIcon(getIcon(order.exchange));
 
+        setInstrument(order);
+
         text.setText(Formatter.kFormat((double) Math.abs(order.amt), 0));
+
+
 
         panel.setBackground(getColor(order.amt));
 
@@ -61,6 +71,25 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
             text.setForeground(Color.YELLOW);
             text.setFont(new Font(null, Font.BOLD, 17));
         }
+
+    }
+
+    private void setInstrument(MarketOrder order) {
+
+        if (order.instrument.contains("bitmexJune")) {
+            instrument.setText(" - june futures");
+        } else if (order.instrument.contains("bitmexSept")) {
+            instrument.setText(" - september futures");
+        }else if (order.instrument.contains("okexThis")) {
+            instrument.setText(" - this week futures");
+        }else if (order.instrument.contains("okexNext")) {
+            instrument.setText(" - next week futures");
+        }else if (order.instrument.contains("okexQuat")) {
+            instrument.setText(" - quarterly futures");
+        } else {
+            instrument.setText("");
+        }
+
 
     }
 

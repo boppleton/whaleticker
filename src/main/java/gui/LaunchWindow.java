@@ -1,6 +1,7 @@
 package gui;
 
 import gui.market.MarketWindow;
+import websocket.Broadcaster;
 import websocket.Buncher;
 import websocket.exchange.binance.BinanceClient;
 import websocket.exchange.bitfinex.BitfinexClient;
@@ -21,11 +22,6 @@ public class LaunchWindow extends JFrame {
     private static OkexClient okexClient;
     private static BinanceClient binanceClient;
     private static GdaxClient gdaxClient;
-    private boolean reconnectBitmex = false;
-    private boolean reconnectBitfinex = false;
-    private boolean reconnectOkex = false;
-    private boolean reconnectGdax = false;
-    private boolean reconnectBinance = false;
 
     private JRadioButton bitmexConnectRadio;
     private JRadioButton bitfinexConnectRadio;
@@ -151,13 +147,31 @@ public class LaunchWindow extends JFrame {
 
         if (connect) {
 
+
             try {
-                bitmexclient = new BitmexClient();
-                bitmexclient.connectBlocking();
-                bitmexclient.subscribe(true, "trade", "XBTUSD");
-                bitmexclient.subscribe(true, "trade", "XBTM18");
-                bitmexclient.subscribe(true, "trade", "XBTU18");
-                bitmexclient.subscribe(true, "liquidation", "XBTUSD");
+
+                Thread thread = new Thread(() -> {
+                    try {
+                        bitmexclient = new BitmexClient();
+                        bitmexclient.connectBlocking();
+                        bitmexclient.setConnectionLostTimeout(10);
+                        bitmexclient.subscribe(true, "trade", "XBTUSD");
+                        bitmexclient.subscribe(true, "trade", "XBTM18");
+                        bitmexclient.subscribe(true, "trade", "XBTU18");
+                        bitmexclient.subscribe(true, "liquidation", "XBTUSD");
+
+                    } catch(Exception v) {
+                        v.printStackTrace();
+                        System.out.println("loop error!");
+                    }
+                });
+                thread.start();
+
+
+                Thread.sleep(5000);
+
+
+
 
                 if (bitmexclient.isOpen()) {
                     bitmexConnectRadio.setText("bitmex: connected");
@@ -185,9 +199,23 @@ public class LaunchWindow extends JFrame {
         if (connect) {
             try {
 
-                bitfinexClient = new BitfinexClient();
-                bitfinexClient.connectBlocking();
-                bitfinexClient.subscribe(true, "trades", "BTCUSD");
+                Thread thread = new Thread(() -> {
+                    try {
+                        bitfinexClient = new BitfinexClient();
+                        bitfinexClient.connectBlocking();
+                        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+
+                    } catch(Exception v) {
+                        v.printStackTrace();
+                        System.out.println("loop error!");
+                    }
+                });
+                thread.start();
+
+
+                Thread.sleep(5000);
+
+
 
                 if (bitfinexClient.isOpen()) {
                     bitfinexConnectRadio.setText("bitfinex: connected");
@@ -213,12 +241,26 @@ public class LaunchWindow extends JFrame {
 
             try {
 
-                okexClient = new OkexClient();
-                okexClient.connectBlocking();
-                okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
-                okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
-                okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
-                okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
+                Thread thread = new Thread(() -> {
+                    try {
+                        okexClient = new OkexClient();
+                        okexClient.connectBlocking();
+                        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
+                        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
+                        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
+                        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
+
+                    } catch(Exception v) {
+                        v.printStackTrace();
+                        System.out.println("loop error!");
+                    }
+                });
+                thread.start();
+
+
+                Thread.sleep(5000);
+
+
 
                 if (okexClient.isOpen()) {
                     okexConnectRadio.setText("okex: connected");
@@ -245,9 +287,23 @@ public class LaunchWindow extends JFrame {
 
             try {
 
-                gdaxClient = new GdaxClient();
-                gdaxClient.connectBlocking();
-                gdaxClient.subscribe(true, "", "");
+                Thread thread = new Thread(() -> {
+                    try {
+                        gdaxClient = new GdaxClient();
+                        gdaxClient.connectBlocking();
+                        gdaxClient.subscribe(true, "", "");
+
+                    } catch(Exception v) {
+                        v.printStackTrace();
+                        System.out.println("loop error!");
+                    }
+                });
+                thread.start();
+
+
+                Thread.sleep(5000);
+
+
 
                 if (gdaxClient.isOpen()) {
                     gdaxConnectRadio.setText("gdax: connected");
@@ -274,11 +330,26 @@ public class LaunchWindow extends JFrame {
 
             try {
 
+                Thread thread = new Thread(() -> {
+                    try {
+                        binanceClient = new BinanceClient("btcusdt@aggTrade");
+                        binanceClient.connectBlocking();
+
+                    } catch(Exception v) {
+                        v.printStackTrace();
+                        System.out.println("loop error!");
+                    }
+                });
+                thread.start();
+
+
+                Thread.sleep(5000);
+
                 binanceClient = new BinanceClient("btcusdt@aggTrade");
                 binanceClient.connectBlocking();
 
                 if (binanceClient.isOpen()) {
-                    binanceConnectRadio.setText("gdax: connected");
+                    binanceConnectRadio.setText("binance: connected");
                 } else {
                     binanceConnectRadio.setSelected(false);
                     binanceConnectRadio.setText("binance: failed connection");

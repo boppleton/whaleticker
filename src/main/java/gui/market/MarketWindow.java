@@ -50,8 +50,8 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         Broadcaster.register(this);
 
         orders = new ArrayList(10);
-        orders.add(new MarketOrder("bitmex", 9000, 3));
-        orders.add(new MarketOrder("bitmex", 80000, 3));
+        orders.add(new MarketOrder("bitmex", "bitmexPerp", 9000, 3));
+        orders.add(new MarketOrder("bitmex", "bitmexJune", 80000, 3));
 
 
         setupTableScrollpane();
@@ -198,17 +198,17 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        okexThisWeekRadio = new JRadioButton("okex this week futures", instruments.contains("okexThisWeek"));
+        okexThisWeekRadio = new JRadioButton("okex this week futures", instruments.contains("okexThis"));
         futuresPanel.add(okexThisWeekRadio, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        okexNextWeekRadio = new JRadioButton("okex next week futures", instruments.contains("okexNextWeek"));
+        okexNextWeekRadio = new JRadioButton("okex next week futures", instruments.contains("okexNext"));
         futuresPanel.add(okexNextWeekRadio, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 4;
-        okexQuarterlyRadio = new JRadioButton("okex quarterly futures", instruments.contains("okexQuarterly"));
+        okexQuarterlyRadio = new JRadioButton("okex quarterly futures", instruments.contains("okexQuat"));
         futuresPanel.add(okexQuarterlyRadio, gbc);
 
         gbc.gridx = 0;
@@ -314,9 +314,9 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         setInstrumentBool(bitmexJuneRadio, "bitmexJune");
         setInstrumentBool(bitmexSeptRadio, "bitmexSept");
 
-        setInstrumentBool(okexThisWeekRadio, "okexThisWeek");
-        setInstrumentBool(okexNextWeekRadio, "okexNextWeek");
-        setInstrumentBool(okexQuarterlyRadio, "okexQuarterly");
+        setInstrumentBool(okexThisWeekRadio, "okexThis");
+        setInstrumentBool(okexNextWeekRadio, "okexNext");
+        setInstrumentBool(okexQuarterlyRadio, "okexQuat");
 
 
 
@@ -395,7 +395,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
             if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
                 EventQueue.invokeLater(() -> {
 
-                    orders.add(0, new MarketOrder(exchange, size, 5));
+                    orders.add(0, new MarketOrder(exchange, instrument, size, 5));
 
                     if (orders.size() > 100) {
                         orders.remove(orders.size() - 1);

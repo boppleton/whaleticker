@@ -21,8 +21,6 @@ import java.util.List;
 public class BitmexClient extends Client {
 
 
-    private static Buncher buncher = new Buncher();
-
     private static BitmexBook book = new BitmexBook();
 
     private static double lastPrice;
@@ -30,7 +28,6 @@ public class BitmexClient extends Client {
 
     public BitmexClient() throws URISyntaxException {
         super(new URI("wss://www.bitmex.com/realtime/"));
-//        buncher.startUpdateThread();
     }
 
     public void subscribe(boolean connect, String topic, String pair) {
@@ -40,8 +37,6 @@ public class BitmexClient extends Client {
     @Override
     public void onMessage(String message) {
 
-//        System.out.println(message);
-//
         if (message.contains("\"table\":\"trade\",\"action\":\"insert\"")) {
             onMessageTrade(message);
         } else if (message.contains("orderBookL2")) {
