@@ -31,6 +31,7 @@ public class LaunchWindow extends JFrame {
 
     private GridBagConstraints gbc;
     private Container c;
+    private JPanel connectionsPan;
 
     public LaunchWindow(String title) throws URISyntaxException, InterruptedException {
         super(title);
@@ -43,23 +44,34 @@ public class LaunchWindow extends JFrame {
         gbc = new GridBagConstraints();
         c = getContentPane();
 
+        connectionsPan = new JPanel(new GridBagLayout());
+        connectionsPan.setBorder(BorderFactory.createTitledBorder("exchanges"));
+
         setupMarketButton();
 
         setupLiqsButton();
 
+//        setupOrderbookButton();
+
         setupConnectionRadios();
+
+
 
 
     }
 
     private void setupConnectionRadios() {
 
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        c.add(connectionsPan, gbc);
+
         gbc.anchor = GridBagConstraints.WEST;
 
         bitmexConnectRadio = new JRadioButton("bitmex: disconnected");
         gbc.gridx = 0;
-        gbc.gridy = 2;
-        c.add(bitmexConnectRadio, gbc);
+        gbc.gridy = 0;
+        connectionsPan.add(bitmexConnectRadio, gbc);
 
         bitmexConnectRadio.addActionListener(new ActionListener() {
             @Override
@@ -74,8 +86,8 @@ public class LaunchWindow extends JFrame {
 
         bitfinexConnectRadio = new JRadioButton("bitfinex: disconnected");
         gbc.gridx = 0;
-        gbc.gridy = 3;
-        c.add(bitfinexConnectRadio, gbc);
+        gbc.gridy = 1;
+        connectionsPan.add(bitfinexConnectRadio, gbc);
 
         bitfinexConnectRadio.addActionListener(new ActionListener() {
             @Override
@@ -92,8 +104,8 @@ public class LaunchWindow extends JFrame {
 
         okexConnectRadio = new JRadioButton("okex: disconnected");
         gbc.gridx = 0;
-        gbc.gridy = 4;
-        c.add(okexConnectRadio, gbc);
+        gbc.gridy = 2;
+        connectionsPan.add(okexConnectRadio, gbc);
 
         okexConnectRadio.addActionListener(new ActionListener() {
             @Override
@@ -110,8 +122,8 @@ public class LaunchWindow extends JFrame {
 
         gdaxConnectRadio = new JRadioButton("gdax: disconnected");
         gbc.gridx = 0;
-        gbc.gridy = 5;
-        c.add(gdaxConnectRadio, gbc);
+        gbc.gridy = 3;
+        connectionsPan.add(gdaxConnectRadio, gbc);
 
         gdaxConnectRadio.addActionListener(new ActionListener() {
             @Override
@@ -126,8 +138,8 @@ public class LaunchWindow extends JFrame {
 
         binanceConnectRadio = new JRadioButton("binance: disconnected");
         gbc.gridx = 0;
-        gbc.gridy = 6;
-        c.add(binanceConnectRadio, gbc);
+        gbc.gridy = 4;
+        connectionsPan.add(binanceConnectRadio, gbc);
 
         binanceConnectRadio.addActionListener(new ActionListener() {
             @Override
@@ -370,7 +382,7 @@ public class LaunchWindow extends JFrame {
     private void setupLiqsButton() {
 
         //liqs button
-        JButton liqsButton = new JButton("liquidations");
+        JButton liqsButton = new JButton("mex liquidations");
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.CENTER;
