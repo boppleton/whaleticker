@@ -26,18 +26,14 @@ public class Buncher {
     }
 
 
-    public void startUpdateThread() {
-
-        Random random = new Random();
-        int ran = random.nextInt(500);
+    public static void startUpdateThread() {
 
         thread = new Thread(() -> {
             try {
                 for (;;) {
-                    System.out.println("sending msgs - #" + msgs.size());
                     msgs.forEach((key, value) -> Broadcaster.broadcast(msgs.get(key)));
                     msgs.clear();
-                    Thread.sleep( ran + 500);
+                    Thread.sleep( 500);
                 }
             } catch(Exception v) {
                 v.printStackTrace();

@@ -1,6 +1,7 @@
 package gui;
 
 import gui.market.MarketWindow;
+import websocket.Buncher;
 import websocket.exchange.binance.BinanceClient;
 import websocket.exchange.bitfinex.BitfinexClient;
 import websocket.exchange.bitmex.BitmexClient;
@@ -20,8 +21,17 @@ public class LaunchWindow extends JFrame {
     private static OkexClient okexClient;
     private static BinanceClient binanceClient;
     private static GdaxClient gdaxClient;
+    private boolean reconnectBitmex = false;
+    private boolean reconnectBitfinex = false;
+    private boolean reconnectOkex = false;
+    private boolean reconnectGdax = false;
+    private boolean reconnectBinance = false;
 
     private JRadioButton bitmexConnectRadio;
+    private JRadioButton bitfinexConnectRadio;
+    private JRadioButton okexConnectRadio;
+    private JRadioButton gdaxConnectRadio;
+    private JRadioButton binanceConnectRadio;
 
     private GridBagConstraints gbc;
     private Container c;
@@ -30,9 +40,7 @@ public class LaunchWindow extends JFrame {
         super(title);
 
 
-        connectBitmex();
-
-        connectBitfinex();
+        Buncher.startUpdateThread();
 
         setLayout(new GridBagLayout());
 
@@ -43,9 +51,7 @@ public class LaunchWindow extends JFrame {
 
         setupLiqsButton();
 
-        setupOrderbookButton();
-
-//        setupConnectionRadios();
+        setupConnectionRadios();
 
 
     }
@@ -55,78 +61,249 @@ public class LaunchWindow extends JFrame {
         gbc.anchor = GridBagConstraints.WEST;
 
         bitmexConnectRadio = new JRadioButton("bitmex: disconnected");
-        bitmexConnectRadio.setSelected(bitmexclient.isOpen());
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         c.add(bitmexConnectRadio, gbc);
 
         bitmexConnectRadio.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-//                    connectBitmex(bitmexConnectRadio.isSelected());
+                    connectBitmex(bitmexConnectRadio.isSelected());
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
             }
         });
 
-        JRadioButton bitfinexConnectRadio = new JRadioButton("bitfinex: disconnected");
+        bitfinexConnectRadio = new JRadioButton("bitfinex: disconnected");
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 3;
         c.add(bitfinexConnectRadio, gbc);
 
-        JRadioButton okexConnectRadio = new JRadioButton("okex: disconnected");
+        bitfinexConnectRadio.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    connectBitfinex(bitfinexConnectRadio.isSelected());
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+
+
+        okexConnectRadio = new JRadioButton("okex: disconnected");
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 4;
         c.add(okexConnectRadio, gbc);
 
-        JRadioButton gdaxConnectRadio = new JRadioButton("gdax: disconnected");
+        okexConnectRadio.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    connectOkex(okexConnectRadio.isSelected());
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+
+
+        gdaxConnectRadio = new JRadioButton("gdax: disconnected");
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 5;
         c.add(gdaxConnectRadio, gbc);
 
-        JRadioButton binanceConnectRadio = new JRadioButton("binance: disconnected");
+        gdaxConnectRadio.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    connectGdax(gdaxConnectRadio.isSelected());
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        binanceConnectRadio = new JRadioButton("binance: disconnected");
         gbc.gridx = 0;
-        gbc.gridy = 7;
+        gbc.gridy = 6;
         c.add(binanceConnectRadio, gbc);
+
+        binanceConnectRadio.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    connectBinance(binanceConnectRadio.isSelected());
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
     }
 
-    public void connectBitmex() throws URISyntaxException, InterruptedException {
 
-        try {
-            bitmexclient = new BitmexClient();
-            bitmexclient.connectBlocking();
-            bitmexclient.subscribe(true, "trade", "XBTUSD");
-            bitmexclient.subscribe(true, "trade", "XBTM18");
-            bitmexclient.subscribe(true, "trade", "XBTU18");
-            bitmexclient.subscribe(true, "liquidation", "XBTUSD");
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void connectBitmex(boolean connect) throws URISyntaxException, InterruptedException {
+
+        if (connect) {
+
+            try {
+                bitmexclient = new BitmexClient();
+                bitmexclient.connectBlocking();
+                bitmexclient.subscribe(true, "trade", "XBTUSD");
+                bitmexclient.subscribe(true, "trade", "XBTM18");
+                bitmexclient.subscribe(true, "trade", "XBTU18");
+                bitmexclient.subscribe(true, "liquidation", "XBTUSD");
+
+                if (bitmexclient.isOpen()) {
+                    bitmexConnectRadio.setText("bitmex: connected");
+                } else {
+                    bitmexConnectRadio.setSelected(false);
+                    bitmexConnectRadio.setText("bitmex: failed connection");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            bitmexclient.close();
+            bitmexclient = null;
+            bitmexConnectRadio.setText("bitmex: disconnected");
         }
 
 
     }
 
-    public void connectBitfinex() throws URISyntaxException, InterruptedException {
+    public void connectBitfinex(boolean connect) throws URISyntaxException, InterruptedException {
 
-        try {
-            bitfinexClient = new BitfinexClient();
-            bitfinexClient.connectBlocking();
-            bitfinexClient.subscribe(true, "trades", "BTCUSD");
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        if (connect) {
+            try {
+
+                bitfinexClient = new BitfinexClient();
+                bitfinexClient.connectBlocking();
+                bitfinexClient.subscribe(true, "trades", "BTCUSD");
+
+                if (bitfinexClient.isOpen()) {
+                    bitfinexConnectRadio.setText("bitfinex: connected");
+                } else {
+                    bitfinexConnectRadio.setSelected(false);
+                    bitfinexConnectRadio.setText("bitfinex: failed connection");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            bitfinexClient.close();
+            bitfinexClient = null;
+            bitfinexConnectRadio.setText("bitfinex: disconnected");
+        }
+    }
+
+    public void connectOkex(boolean connect) throws URISyntaxException, InterruptedException {
+
+        if (connect) {
+
+            try {
+
+                okexClient = new OkexClient();
+                okexClient.connectBlocking();
+                okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
+                okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
+                okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
+                okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
+
+                if (okexClient.isOpen()) {
+                    okexConnectRadio.setText("okex: connected");
+                } else {
+                    okexConnectRadio.setSelected(false);
+                    okexConnectRadio.setText("okex: failed connection");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            okexClient.close();
+            okexClient = null;
+            okexConnectRadio.setText("okex: disconnected");
+
+        }
+    }
+
+    public void connectGdax(boolean connect) throws URISyntaxException, InterruptedException {
+
+        if (connect) {
+
+            try {
+
+                gdaxClient = new GdaxClient();
+                gdaxClient.connectBlocking();
+                gdaxClient.subscribe(true, "", "");
+
+                if (gdaxClient.isOpen()) {
+                    gdaxConnectRadio.setText("gdax: connected");
+                } else {
+                    gdaxConnectRadio.setSelected(false);
+                    gdaxConnectRadio.setText("gdax: failed connection");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            gdaxClient.close();
+            gdaxClient = null;
+            gdaxConnectRadio.setText("gdax: disconnected");
         }
 
-
     }
+
+    public void connectBinance(boolean connect) throws URISyntaxException, InterruptedException {
+
+        if (connect) {
+
+            try {
+
+                binanceClient = new BinanceClient("btcusdt@aggTrade");
+                binanceClient.connectBlocking();
+
+                if (binanceClient.isOpen()) {
+                    binanceConnectRadio.setText("gdax: connected");
+                } else {
+                    binanceConnectRadio.setSelected(false);
+                    binanceConnectRadio.setText("binance: failed connection");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            binanceClient.close();
+            binanceClient = null;
+            binanceConnectRadio.setText("binance: disconnected");
+        }
+    }
+
 
     private void setupLiqsButton() {
 
         //liqs button
         JButton liqsButton = new JButton("liquidations");
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weighty = 1;
         c.add(liqsButton, gbc);
 
     }
@@ -137,6 +314,8 @@ public class LaunchWindow extends JFrame {
         JButton orderbookButton = new JButton("limit orders");
         gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weighty = 1;
         c.add(orderbookButton, gbc);
 
     }

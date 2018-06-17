@@ -19,7 +19,6 @@ public class BinanceClient extends Client {
 
     public BinanceClient(String stream) throws URISyntaxException {
         super(new URI("wss://stream.binance.com:9443/ws/" + stream));
-        buncher.startUpdateThread();
     }
 
 

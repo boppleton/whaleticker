@@ -379,110 +379,40 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     @Override
     public void receiveBroadcast(String message) throws InterruptedException, IOException {
 
-        boolean side = (message.substring(message.indexOf("!")+1, message.indexOf("!#")).contains("Buy"));
-        String exchange = message.substring(message.indexOf("%") + 1, message.indexOf("%<"));
-        String instrument = message.substring(message.indexOf("<") + 1, message.indexOf(">!"));
-        System.out.println(instrument);
-        System.out.println("in array: " + instruments.toString());
-        final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
-
-        System.out.println(instruments.contains(instrument));
+        if (!message.contains("liq")) {
 
 
-        if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
-            EventQueue.invokeLater(() -> {
+            boolean side = (message.substring(message.indexOf("!") + 1, message.indexOf("!#")).contains("Buy"));
+            String exchange = message.substring(message.indexOf("%") + 1, message.indexOf("%<"));
+            String instrument = message.substring(message.indexOf("<") + 1, message.indexOf(">!"));
+            System.out.println(instrument);
+            System.out.println("in array: " + instruments.toString());
+            final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
 
-                orders.add(0, new MarketOrder(exchange, size, 5));
+            System.out.println(instruments.contains(instrument));
 
-                if (orders.size() > 100) {
-                    orders.remove(orders.size() - 1);
-                    orders.remove(orders.size() - 1);
-                    orders.remove(orders.size() - 1);
-                }
 
-                //maybe remove some of these
-                revalidate();
-                tradesTable.revalidate();
-                tradesScrollPane.revalidate();
-            });
+            if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
+                EventQueue.invokeLater(() -> {
+
+                    orders.add(0, new MarketOrder(exchange, size, 5));
+
+                    if (orders.size() > 100) {
+                        orders.remove(orders.size() - 1);
+                        orders.remove(orders.size() - 1);
+                        orders.remove(orders.size() - 1);
+                    }
+
+                    //maybe remove some of these
+                    revalidate();
+                    tradesTable.revalidate();
+                    tradesScrollPane.revalidate();
+                });
+            }
+
+        } else if (message.contains("liq")) {
+            //add liq
         }
-
-
-//        if (message.contains("bitmex")) {
-//
-//            System.out.println(message);
-//
-//            boolean side = (message.substring(message.indexOf("!")+1, message.indexOf("!#")).contains("Buy"));
-//            String instrument = message.substring(message.indexOf("<")+1, message.indexOf(">!"));
-//            System.out.println(instrument);
-//            System.out.println("in array: " + instruments.toString());
-//            final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
-//
-//            System.out.println(instruments.contains(instrument));
-//
-//
-//            if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
-//                EventQueue.invokeLater(() -> {
-//
-//                    orders.add(0, new MarketOrder("bitmex", size, 5));
-//
-//                    if (orders.size() > 100) {
-//                        orders.remove(orders.size()-1);
-//                        orders.remove(orders.size()-1);
-//                        orders.remove(orders.size()-1);
-//                    }
-//
-//                    //maybe remove some of these
-//                    revalidate();
-//                    tradesTable.revalidate();
-//                    tradesScrollPane.revalidate();
-//                });
-//            }
-//
-//        } else if (message.contains("bitmexliq")) {
-//
-////            Toolkit.getDefaultToolkit().beep();
-//
-//            boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("Buy"));
-//            double amount = Double.parseDouble(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
-//            System.out.println("liq amount: " + amount);
-//
-//            double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.indexOf("@*")));
-//            String action = String.valueOf(message.substring(message.indexOf("*") + 1, message.indexOf("*^")));
-//
-//            String id = String.valueOf(message.substring(message.indexOf("^") + 1, message.indexOf("^_")));
-//
-////            if (action.contains("insert")) {
-////                addLiq(new TradeUni("bitmex", Formatter.kFormat(amount, 0) + "", amount, side, price, "time", id));
-////            } else if (action.contains("update")) {
-////                updateLiq(new TradeUni("bitmex", "", amount, side, price, "time", id));
-//        } else if (message.contains("bitfinex")) {
-//
-//
-//            System.out.println(message);
-//            boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("true"));
-//            final int size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
-//
-//            System.out.println("new bitfinex trade " + size);
-//
-//            if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt) {
-//
-//                EventQueue.invokeLater(() -> {
-//
-//                    orders.add(0, new MarketOrder("bitfinex", size, 5));
-//
-//                    //maybe remove some of these
-//                    revalidate();
-//                    tradesTable.revalidate();
-//                    tradesScrollPane.revalidate();
-//                });
-//            }
-//
-//
-//        } else if (message.contains("bitmex") || message.contains("okex") || message.contains("binance") || message.contains("gdax")) {
-////            addTradeData(message, message.substring(0, 1).equals("u"));
-//
-//        }
     }
 
     public void setMinimumAmt(String minimumAmt) {

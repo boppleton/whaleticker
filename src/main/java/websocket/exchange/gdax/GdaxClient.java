@@ -31,7 +31,6 @@ public class GdaxClient extends Client {
 
     public GdaxClient() throws URISyntaxException {
         super(new URI("wss://ws-feed.gdax.com/"));
-        buncher.startUpdateThread();
     }
 
     public void subscribe(boolean connect, String topic, String pair) {

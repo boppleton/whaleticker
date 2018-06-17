@@ -18,7 +18,7 @@ public class BitfinexClient extends Client {
 
     public BitfinexClient() throws URISyntaxException {
         super(new URI("wss://api.bitfinex.com/ws/"));
-        buncher.startUpdateThread();
+//        buncher.startUpdateThread();
     }
 
 

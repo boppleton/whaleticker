@@ -79,10 +79,10 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
                 icon = new ImageIcon(getClass().getResource("/okex22.png"));
                 break;
             case "binance":
-                icon = new ImageIcon(getClass().getResource("/whale25.png"));
+                icon = new ImageIcon(getClass().getResource("/binance.png"));
                 break;
             case "gdax":
-                icon = new ImageIcon(getClass().getResource("/gdax22.png"));
+                icon = new ImageIcon(getClass().getResource("/gdax25.png"));
                 break;
         }
 

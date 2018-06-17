@@ -24,7 +24,6 @@ public class OkexClient extends Client {//todo: remove first pushes by checking 
 
     public OkexClient() throws URISyntaxException {
         super(new URI("wss://real.okex.com:10440/websocket/okexapi"));
-        buncher.startUpdateThread();
 
         startTimeSetup();
     }
