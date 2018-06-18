@@ -33,7 +33,7 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    UIManager.setLookAndFeel(new SubstanceMistSilverLookAndFeel());
+                    UIManager.setLookAndFeel(new SubstanceGraphiteAquaLookAndFeel());
                 } catch (Exception e) {
                     System.out.println("Substance Graphite failed to initialize");
                 }
@@ -44,6 +44,7 @@ public class Main {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
                 launchWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //set X close
                 launchWindow.setSize(220, 300); //set dimensions
                 launchWindow.setLocationRelativeTo(null); //null makes it open in the center
