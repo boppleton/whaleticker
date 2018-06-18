@@ -1,6 +1,5 @@
 package gui.market;
 
-import gui.market.MarketOrder;
 import websocket.Formatter;
 
 import javax.swing.*;
@@ -10,15 +9,14 @@ import java.awt.*;
 public class MarketOrderCell extends AbstractCellEditor implements TableCellRenderer {
 
     private JPanel panel;
-    private JLabel text;
+    private JLabel size;
     private JLabel instrument;
     private JLabel slip;
 
-    private MarketOrder order;
-
     MarketOrderCell() {
 
-        text = new JLabel();
+        size = new JLabel();
+
         instrument = new JLabel();
         instrument.setForeground(Color.GRAY);
         instrument.setFont(new Font(null, Font.ITALIC, 12));
@@ -29,74 +27,71 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
-        panel.add(text);
+        panel.add(size);
         panel.add(slip);
         panel.add(instrument);
-
-
     }
 
 
-    private void updateData(MarketOrder order, boolean isSelected, JTable table) {
-        this.order = order;
+    private void updateData(MarketOrder order) {
 
-        text.setIcon(getIcon(order.exchange));
-
+        size.setText(Formatter.kFormat((double) Math.abs(order.getAmt()), 0) + " ");
+        size.setIcon(getIcon(order.getExchange()));
         setInstrument(order);
         setSlip(order);
 
-        text.setText(Formatter.kFormat((double) Math.abs(order.amt), 0) + " ");
+        panel.setBackground(getColor(order.getAmt()));
 
+        int orderAmt = Math.abs(order.getAmt());
 
-
-        panel.setBackground(getColor(order.amt));
-
-        int orderAmt = Math.abs(order.amt);
-
+        //do this better
         if (orderAmt < 1000) {
             panel.setBorder(null);
-            text.setForeground(Color.GRAY);
-            text.setFont(new Font(null, Font.ITALIC, 12));
+            size.setForeground(Color.GRAY);
+            size.setFont(new Font(null, Font.ITALIC, 12));
 
         } else if (orderAmt < 10000) {
             panel.setBorder(null);
-            text.setForeground(Color.DARK_GRAY);
-            text.setFont(new Font(null, Font.ITALIC, 13));
+            size.setForeground(Color.DARK_GRAY);
+            size.setFont(new Font(null, Font.ITALIC, 13));
 
         } else if (orderAmt < 100000) {
             panel.setBorder(null);
-            text.setForeground(Color.BLACK);
-            text.setFont(new Font(null, Font.PLAIN, 15));
+            size.setForeground(Color.BLACK);
+            size.setFont(new Font(null, Font.PLAIN, 15));
 
         } else if (orderAmt < 500000) {
             panel.setBorder(null);
-            text.setForeground(Color.BLACK);
-            text.setFont(new Font(null, Font.PLAIN, 17));
+            size.setForeground(Color.BLACK);
+            size.setFont(new Font(null, Font.PLAIN, 17));
 
         } else if (orderAmt < 1000000) {
             panel.setBorder(null);
-            text.setForeground(Color.WHITE);
-            text.setFont(new Font(null, Font.CENTER_BASELINE, 17));
+            size.setForeground(Color.WHITE);
+            size.setFont(new Font(null, Font.BOLD, 17));
 
         } else { //over 1mil
             panel.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
-            text.setForeground(Color.YELLOW);
-            text.setFont(new Font(null, Font.BOLD, 17));
+            size.setForeground(Color.YELLOW);
+            size.setFont(new Font(null, Font.BOLD, 17));
         }
 
     }
 
     private void setSlip(MarketOrder order) {
 
-        if (Math.abs(order.slip) >= 1) {
+        int slipInt = order.getSlip();
 
-            slip.setText(String.valueOf(Math.abs(order.slip)));
+        if (Math.abs(slipInt) >= 1) {
 
-            if (order.slip > 0) {
+            slip.setText(String.valueOf(Math.abs(slipInt)));
+
+            if (slipInt > 0) {
                 slip.setIcon(new ImageIcon(getClass().getResource("/uparrow.png")));
             } else {
                 slip.setIcon(new ImageIcon(getClass().getResource("/downarrow.png")));
             }
+
         } else {
             slip.setText("");
             slip.setIcon(null);
@@ -105,21 +100,28 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
     private void setInstrument(MarketOrder order) {
 
-        if (order.instrument.contains("bitmexJune")) {
-            instrument.setText(" - june futures");
-        } else if (order.instrument.contains("bitmexSept")) {
-            instrument.setText(" - september futures");
-        }else if (order.instrument.contains("okexThis")) {
-            instrument.setText(" - this week futures");
-        }else if (order.instrument.contains("okexNext")) {
-            instrument.setText(" - next week futures");
-        }else if (order.instrument.contains("okexQuat")) {
-            instrument.setText(" - quarterly futures");
-        } else {
-            instrument.setText("");
+        String in = order.getInstrument();
+
+        switch (in) {
+            case "bitmexJune":
+                instrument.setText(" june");
+                break;
+            case "bitmexSept":
+                instrument.setText(" september");
+                break;
+            case "okexThis":
+                instrument.setText(" this week");
+                break;
+            case "okexNext":
+                instrument.setText(" next week");
+                break;
+            case "okexQuat":
+                instrument.setText(" quarterly");
+                break;
+            default:
+                instrument.setText("");
+                break;
         }
-
-
     }
 
     private Icon getIcon(String exchange) {
@@ -145,22 +147,11 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
         }
 
         return icon;
-
-    }
-
-    @Override
-    public Object getCellEditorValue() {
-        return null;
-    }
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        MarketOrder order = (MarketOrder) value;
-        updateData(order, isSelected, table);
-        return panel;
     }
 
     private static Color getColor(int amt) {
 
-        int intensity = (int) Math.abs(amt) / 2000;
+        int intensity = Math.abs(amt) / 2000;
 
         if (intensity > 165) {
             intensity = 165;
@@ -168,13 +159,23 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
             intensity = 1;
         }
 
-
         if (amt > 0) {
             return new Color(170 - intensity, 255 - intensity / 2, 170 - intensity);
         } else {
             return new Color(255 - intensity / 2, 170 - intensity, 170 - intensity);
         }
 
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+        return null;
+    }
+
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        MarketOrder order = (MarketOrder) value;
+        updateData(order);
+        return panel;
     }
 
 

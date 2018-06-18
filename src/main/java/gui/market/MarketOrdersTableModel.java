@@ -1,14 +1,12 @@
 package gui.market;
 
-import gui.market.MarketOrder;
-
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
 public class MarketOrdersTableModel extends AbstractTableModel {
-    List marketOrders;
+    private List marketOrders;
 
-    public MarketOrdersTableModel(List marketOrders) {
+    MarketOrdersTableModel(List marketOrders) {
         this.marketOrders = marketOrders;
     }
 

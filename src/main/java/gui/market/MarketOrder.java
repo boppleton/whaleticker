@@ -1,15 +1,18 @@
 package gui.market;
 
+//todo: getters
+
 public class MarketOrder {
 
-    public String exchange;
-    public String instrument;
-    public int amt;
-    public int slip;
-    public double firstPrice;
-    public double lastPrice;
+    private String exchange;
+    private String instrument;
+    private int amt;
+    private int slip;
+    private double firstPrice;
+    private double lastPrice;
 
-    public MarketOrder(String exchange, String instrument, int amt, int slip, double firstPrice, double lastPrice) {
+    MarketOrder(String exchange, String instrument, int amt, int slip, double firstPrice, double lastPrice) {
+
         this.exchange = exchange;
         this.instrument = instrument;
         this.amt = amt;
@@ -17,5 +20,12 @@ public class MarketOrder {
         this.firstPrice = firstPrice;
         this.lastPrice = lastPrice;
     }
+
+    public String getExchange() { return exchange; }
+    public String getInstrument() { return instrument; }
+    public int getAmt() { return amt; }
+    public int getSlip() { return slip; }
+    public double getFirstPrice() { return firstPrice; }
+    public double getLastPrice() { return lastPrice; }
 
 }
