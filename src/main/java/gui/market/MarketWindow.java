@@ -407,7 +407,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 
                     orders.add(0, new MarketOrder(exchange, instrument, size, slip, firstPrice, lastPrice ));
 
-                    if (orders.size() > 100) {
+                    if (orders.size() > 150) {
                         orders.remove(orders.size() - 1);
                         orders.remove(orders.size() - 1);
                         orders.remove(orders.size() - 1);

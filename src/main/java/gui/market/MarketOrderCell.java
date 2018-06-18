@@ -90,7 +90,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
         if (Math.abs(order.slip) >= 1) {
 
-            slip.setText(String.valueOf(Math.abs(order.slip)) + " - " + order.lastPrice);
+            slip.setText(String.valueOf(Math.abs(order.slip)));
 
             if (order.slip > 0) {
                 slip.setIcon(new ImageIcon(getClass().getResource("/uparrow.png")));
