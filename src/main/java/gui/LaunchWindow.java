@@ -411,7 +411,7 @@ public class LaunchWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 MarketWindow marketWindow = new MarketWindow("");
                 marketWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //set X close
-                marketWindow.setSize(100, 700); //set dimensions
+                marketWindow.setSize(120, 400); //set dimensions
                 marketWindow.setLocationRelativeTo(null); //null makes it open in the center
                 marketWindow.setVisible(true); //show window
             }
