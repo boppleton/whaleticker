@@ -8,6 +8,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
+//todo: fix slip and add btc size add liq
+//click to clear orderbook to see whats happening
+
 public class MarketWindow extends JFrame implements Broadcaster.BroadcastListener {
 
     private ArrayList orders;
@@ -56,13 +59,25 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
             double firstPrice = Double.valueOf(message.substring(message.indexOf("~") + 1, message.indexOf("~=")));
             double lastPrice = Double.valueOf(message.substring(message.indexOf("=") + 1, message.indexOf("=+")));
 
-            int slip = (int)(lastPrice-firstPrice);
-
             if (exchange.equals("bitmex") || side) {
                 size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
             } else {
                 size = -Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
             }
+
+            int slipInt = (int) (lastPrice - firstPrice);
+
+            final int slip = (!(firstPrice > 0 && lastPrice > 0) || ((size > 0 && slipInt < 0) || (size < 0 && slipInt > 0))) ? 0 : slipInt;
+//
+
+//            final int slip = (int) (lastPrice - firstPrice);
+//            if (!(firstPrice > 0 && lastPrice > 0) || ((size > 0 && slip < 0) || (size < 0 && slip > 0))) {
+//                slip = 0;
+//            }
+
+
+
+
 
             if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
                 EventQueue.invokeLater(() -> {

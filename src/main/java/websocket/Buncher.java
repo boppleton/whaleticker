@@ -19,13 +19,6 @@ public class Buncher {
 
     }
 
-    public Buncher(int minAmount) {
-
-        this.minAmount = minAmount;
-
-    }
-
-
     public static void startUpdateThread() {
 
         thread = new Thread(() -> {
@@ -45,7 +38,6 @@ public class Buncher {
 
     public void addToBuncher(TradeUni trade) {
 
-        System.out.println("adding to buncher " + trade.getSize());
 
         //if no bunch start new one
         if (bunch == null) { newBunch(trade); }
@@ -90,12 +82,14 @@ public class Buncher {
         if (!updateExisting) {
 
             msg = "%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!#" + (int) bunch.getSize() + "#@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*~" + Buncher.bunch.getFirstPrice() + "~=" + bunch.getLastPrice() + "=+";
-            System.out.println("adding msg " + msg);
+            System.out.println(msg);
+
             msgs.put(bunch.getTimestamp(), msg);
 
         } else if (updateExisting) {
             msg = "%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!#" + (int) bunch.getSize() + "#@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*~" + Buncher.bunch.getFirstPrice() + "~=" + bunch.getLastPrice() + "=+";
-            System.out.println("updating msg " + msg);
+            System.out.println("+ " + msg);
+
             msgs.remove(bunch.getTimestamp());
             msgs.put(bunch.getTimestamp(), msg);
 
