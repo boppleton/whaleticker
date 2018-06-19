@@ -1,5 +1,6 @@
 package gui;
 
+import gui.liq.LiqWindow;
 import gui.market.MarketWindow;
 import websocket.Broadcaster;
 import websocket.Buncher;
@@ -383,6 +384,15 @@ public class LaunchWindow extends JFrame {
 
         //liqs button
         JButton liqsButton = new JButton("mex liquidations");
+        liqsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                LiqWindow liqWindow = new LiqWindow("liquidations");
+                liqWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //set X close
+                liqWindow.setSize(300, 400); //set dimensions
+                liqWindow.setLocationRelativeTo(null); //null makes it open in the center
+                liqWindow.setVisible(true); //show window
+            }
+        });
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.CENTER;

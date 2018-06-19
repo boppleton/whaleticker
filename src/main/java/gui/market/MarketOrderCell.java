@@ -12,6 +12,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
     private JLabel size;
     private JLabel instrument;
     private JLabel slip;
+    private JLabel btcAmt;
 
     MarketOrderCell() {
 
@@ -23,11 +24,16 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
         slip = new JLabel();
         slip.setForeground(Color.BLACK);
-        slip.setFont(new Font(null, Font.BOLD, 14));
+        slip.setFont(new Font(null, Font.PLAIN, 11));
+
+        btcAmt = new JLabel();
+        btcAmt.setForeground(Color.DARK_GRAY);
+        btcAmt.setFont(new Font(null, Font.ITALIC, 11));
 
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
         panel.add(size);
+        panel.add(btcAmt);
         panel.add(slip);
         panel.add(instrument);
     }
@@ -39,6 +45,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
         size.setIcon(getIcon(order.getExchange()));
         setInstrument(order);
         setSlip(order);
+        setBtcAmt(order);
 
         panel.setBackground(getColor(order.getAmt()));
 
@@ -76,6 +83,17 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
             size.setFont(new Font(null, Font.BOLD, 17));
         }
 
+    }
+
+    private void setBtcAmt(MarketOrder order) {
+
+        btcAmt.setText("");
+
+        if (order.getExchange().equals("bitfinex") || order.getExchange().equals("binance") || order.getExchange().equals("gdax")) {
+            if (order.getLastPrice() != 0 && order.getAmt() > 9000) {
+                btcAmt.setText("" + Formatter.lowFormat(order.getAmt() / order.getLastPrice()) + " btc");
+            }
+        }
     }
 
     private void setSlip(MarketOrder order) {

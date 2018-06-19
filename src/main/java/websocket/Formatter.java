@@ -24,7 +24,7 @@ public class Formatter {
 
     public static String lowFormat(double size) {
 
-        return String.format("%.0f", Math.rint(size));
+        return String.format("%.0f", Math.abs(Math.rint(size)));
     }
 
     public static String amountFormat(int minimumTradeAmt) {

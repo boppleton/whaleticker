@@ -2,13 +2,15 @@ package gui.market;
 
 import websocket.Broadcaster;
 import websocket.Formatter;
+import websocket.TradeUni;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-//todo: fix slip and add btc size add liq
+//todo: liq
 //click to clear orderbook to see whats happening
 
 public class MarketWindow extends JFrame implements Broadcaster.BroadcastListener {
@@ -23,6 +25,8 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 
     private int minimumTradeAmt = 100;
     private int maxTradeAmt = 999999999;
+
+    private int minLiq = 1;
 
     private ArrayList<String> instruments = new ArrayList<>();
     private JRadioButton bitmexPerpSwapRadio;
@@ -76,13 +80,12 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 //            }
 
 
-
-
-
             if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
                 EventQueue.invokeLater(() -> {
 
-                    orders.add(0, new MarketOrder(exchange, instrument, size, slip, firstPrice, lastPrice ));
+                    System.out.println("adding " + exchange + size + side);
+
+                    orders.add(0, new MarketOrder(exchange, instrument, size, slip, firstPrice, lastPrice));
 
                     if (orders.size() > 150) {
                         orders.remove(orders.size() - 1);
@@ -97,10 +100,10 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
                 });
             }
 
-        } else if (message.contains("liq")) {
-            //add liq
         }
     }
+
+
 
     private void settingsDialog() {
 
@@ -220,11 +223,21 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
                     EventQueue.invokeLater(() -> {
                         orders.clear();
                         tradesTable.revalidate();
-                    }); } }
-            public void mousePressed(MouseEvent e) {}
-            public void mouseReleased(MouseEvent e) {}
-            public void mouseEntered(MouseEvent e) {}
-            public void mouseExited(MouseEvent e) {}
+                    });
+                }
+            }
+
+            public void mousePressed(MouseEvent e) {
+            }
+
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            public void mouseExited(MouseEvent e) {
+            }
         });
 
         tradesScrollPane = new JScrollPane(tradesTable);
@@ -235,17 +248,27 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
                 tradesScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
             } else {
                 tradesScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(10, 0));
-            } });
+            }
+        });
 
         tradesScrollPane.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     settingsDialog();
-                } }
-            public void mousePressed(MouseEvent e) {}
-            public void mouseReleased(MouseEvent e) {}
-            public void mouseEntered(MouseEvent e) {}
-            public void mouseExited(MouseEvent e) {}
+                }
+            }
+
+            public void mousePressed(MouseEvent e) {
+            }
+
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            public void mouseExited(MouseEvent e) {
+            }
         });
 
         this.add(tradesScrollPane);
