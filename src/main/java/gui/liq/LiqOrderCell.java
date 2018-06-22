@@ -39,7 +39,7 @@ public class LiqOrderCell extends AbstractCellEditor implements TableCellRendere
 
     private void updateData(LiqOrder order) {
 
-        size.setText(Formatter.kFormat((double) Math.abs(order.getAmt()), 0) + " " + (order.getAmt() > 0 ? "short liq'd " : "long liq'd ") + instrument.getText());
+        size.setText(Formatter.kFormat((double) Math.abs(order.getAmt()), 0) + " " + (order.getSide() ? "short liq'd " : "long liq'd "));
         size.setIcon(getIcon(order.getExchange()));
         setInstrument(order);
 

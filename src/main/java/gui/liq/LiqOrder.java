@@ -51,4 +51,8 @@ public class LiqOrder {
     public void setSize(int size) {
         this.amt = size;
     }
+
+    public boolean getSide() {
+        return side;
+    }
 }

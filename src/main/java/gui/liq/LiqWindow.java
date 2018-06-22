@@ -63,7 +63,7 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
 
     public void addLiq(LiqOrder t) {
 
-        if (t.getSize() > minLiq) {
+        if (t.getSize() >= minLiq) {
 
             liqs.add(0, t);
 
@@ -210,19 +210,20 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     settingsDialog();
-                }else if (e.getButton() == MouseEvent.BUTTON1) {
-                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + 420  + "#@" + 9001 + "@*" + "insert" + "*^" + "ididid" + "^_");
-
-                    liqsTable.revalidate();
-                    liqsScrollPane.revalidate();
-                    revalidate();
-                } else if (e.getButton() == MouseEvent.BUTTON2) {
-                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + 50100 + "#@" + -1 + "@*" + "update" + "*^" + "ididid" + "^_");
-
-                    liqsTable.revalidate();
-                    liqsScrollPane.revalidate();
-                    revalidate();
                 }
+//                else if (e.getButton() == MouseEvent.BUTTON1) {
+//                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + 420  + "#@" + 9001 + "@*" + "insert" + "*^" + "ididid" + "^_");
+//
+//                    liqsTable.revalidate();
+//                    liqsScrollPane.revalidate();
+//                    revalidate();
+//                } else if (e.getButton() == MouseEvent.BUTTON2) {
+//                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + 50100 + "#@" + -1 + "@*" + "update" + "*^" + "ididid" + "^_");
+//
+//                    liqsTable.revalidate();
+//                    liqsScrollPane.revalidate();
+//                    revalidate();
+//                }
             }
 
             public void mousePressed(MouseEvent e) {
@@ -238,8 +239,10 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
             }
         });
 
+
         this.add(liqsScrollPane);
     }
+
 
 
     private void setShowFrame(boolean radio) {
