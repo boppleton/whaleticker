@@ -83,7 +83,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
             if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
                 EventQueue.invokeLater(() -> {
 
-                    System.out.println("adding " + exchange + size + side);
+//                    System.out.println("adding " + exchange + size + side);
 
                     orders.add(0, new MarketOrder(exchange, instrument, size, slip, firstPrice, lastPrice));
 

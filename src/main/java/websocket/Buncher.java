@@ -82,13 +82,13 @@ public class Buncher {
         if (!updateExisting) {
 
             msg = "%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!#" + (int) bunch.getSize() + "#@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*~" + Buncher.bunch.getFirstPrice() + "~=" + bunch.getLastPrice() + "=+";
-            System.out.println(msg);
+//            System.out.println(msg);
 
             msgs.put(bunch.getTimestamp(), msg);
 
         } else if (updateExisting) {
             msg = "%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!#" + (int) bunch.getSize() + "#@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*~" + Buncher.bunch.getFirstPrice() + "~=" + bunch.getLastPrice() + "=+";
-            System.out.println("+ " + msg);
+//            System.out.println("+ " + msg);
 
             msgs.remove(bunch.getTimestamp());
             msgs.put(bunch.getTimestamp(), msg);

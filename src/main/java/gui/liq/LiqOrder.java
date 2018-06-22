@@ -8,24 +8,47 @@ public class LiqOrder {
     private String instrument;
     private int amt;
     private int slip;
-    private double firstPrice;
-    private double lastPrice;
+    private double price;
+    private String updates;
+    private boolean side;
 
-    LiqOrder(String exchange, String instrument, int amt, int slip, double firstPrice, double lastPrice) {
+    private String timestamp;
+    private String id;
 
+
+    public LiqOrder(String exchange, String s, int amount, boolean side, double price, String time, String id) {
         this.exchange = exchange;
-        this.instrument = instrument;
-        this.amt = amt;
-        this.slip = slip;
-        this.firstPrice = firstPrice;
-        this.lastPrice = lastPrice;
+        this.instrument = s;
+        this.amt = amount;
+        this.side = side;
+        this.price = price;
+        this.timestamp = time;
+        this.id = id;
     }
 
     public String getExchange() { return exchange; }
     public String getInstrument() { return instrument; }
     public int getAmt() { return amt; }
     public int getSlip() { return slip; }
-    public double getFirstPrice() { return firstPrice; }
-    public double getLastPrice() { return lastPrice; }
 
+
+    public String getUpdates() {
+        return updates;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public int getSize() {
+        return amt;
+    }
+
+    public void setInstrument(String instrument) {
+        this.instrument = instrument;
+    }
+
+    public void setSize(int size) {
+        this.amt = size;
+    }
 }

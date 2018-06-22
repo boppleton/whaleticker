@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
 
-    private ArrayList<TradeUni> liqs;
+    private ArrayList<LiqOrder> liqs;
 
     private JScrollPane liqsScrollPane;
     private JTable liqsTable;
@@ -41,7 +41,7 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
         if (message.contains("liq")) {
 
             boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("Buy"));
-            double amount = Double.parseDouble(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
+            int amount = (int) Double.parseDouble(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
             System.out.println("liq amount: " + amount);
 
             double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.indexOf("@*")));
@@ -49,10 +49,11 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
 
             String id = String.valueOf(message.substring(message.indexOf("^") + 1, message.indexOf("^_")));
 
+
             if (action.contains("insert")) {
-                addLiq(new TradeUni("bitmex", Formatter.kFormat(amount, 0) + "", amount, side, price, "time", id));
+                addLiq(new LiqOrder("bitmex", Formatter.kFormat(amount, 0) + "", amount, side, price, "time", id));
             } else if (action.contains("update")) {
-                updateLiq(new TradeUni("bitmex", "", amount, side, price, "time", id));
+                updateLiq(new LiqOrder("bitmex", "", amount, side, price, "time", id));
             }
 
 
@@ -60,7 +61,7 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
         }
     }
 
-    public void addLiq(TradeUni t) {
+    public void addLiq(LiqOrder t) {
 
         if (t.getSize() > minLiq) {
 
@@ -74,7 +75,7 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
     }
 
 
-    private void updateLiq(TradeUni tradeUni) {
+    private void updateLiq(LiqOrder tradeUni) {
 
 
         for (int i = 0; i < liqs.size(); i++) {
@@ -209,6 +210,18 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     settingsDialog();
+                }else if (e.getButton() == MouseEvent.BUTTON1) {
+                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + 420  + "#@" + 9001 + "@*" + "insert" + "*^" + "ididid" + "^_");
+
+                    liqsTable.revalidate();
+                    liqsScrollPane.revalidate();
+                    revalidate();
+                } else if (e.getButton() == MouseEvent.BUTTON2) {
+                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + 50100 + "#@" + -1 + "@*" + "update" + "*^" + "ididid" + "^_");
+
+                    liqsTable.revalidate();
+                    liqsScrollPane.revalidate();
+                    revalidate();
                 }
             }
 

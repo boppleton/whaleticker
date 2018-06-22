@@ -33,19 +33,15 @@ public class LiqOrderCell extends AbstractCellEditor implements TableCellRendere
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
         panel.add(size);
-        panel.add(btcAmt);
-        panel.add(slip);
         panel.add(instrument);
     }
 
 
     private void updateData(LiqOrder order) {
 
-        size.setText(Formatter.kFormat((double) Math.abs(order.getAmt()), 0) + " ");
+        size.setText(Formatter.kFormat((double) Math.abs(order.getAmt()), 0) + " " + (order.getAmt() > 0 ? "short liq'd " : "long liq'd ") + instrument.getText());
         size.setIcon(getIcon(order.getExchange()));
         setInstrument(order);
-        setSlip(order);
-        setBtcAmt(order);
 
         panel.setBackground(getColor(order.getAmt()));
 
@@ -85,16 +81,6 @@ public class LiqOrderCell extends AbstractCellEditor implements TableCellRendere
 
     }
 
-    private void setBtcAmt(LiqOrder order) {
-
-        btcAmt.setText("");
-
-        if (order.getExchange().equals("bitfinex") || order.getExchange().equals("binance") || order.getExchange().equals("gdax")) {
-            if (order.getLastPrice() != 0 && order.getAmt() > 9000) {
-                btcAmt.setText("" + Formatter.lowFormat(order.getAmt() / order.getLastPrice()) + " btc");
-            }
-        }
-    }
 
     private void setSlip(LiqOrder order) {
 
@@ -120,26 +106,7 @@ public class LiqOrderCell extends AbstractCellEditor implements TableCellRendere
 
         String in = order.getInstrument();
 
-        switch (in) {
-            case "bitmexJune":
-                instrument.setText(" june");
-                break;
-            case "bitmexSept":
-                instrument.setText(" september");
-                break;
-            case "okexThis":
-                instrument.setText(" this week");
-                break;
-            case "okexNext":
-                instrument.setText(" next week");
-                break;
-            case "okexQuat":
-                instrument.setText(" quarterly");
-                break;
-            default:
-                instrument.setText("");
-                break;
-        }
+        instrument.setText(in);
     }
 
     private Icon getIcon(String exchange) {

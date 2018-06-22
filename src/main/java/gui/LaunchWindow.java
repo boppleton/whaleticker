@@ -166,8 +166,9 @@ public class LaunchWindow extends JFrame {
                 Thread thread = new Thread(() -> {
                     try {
                         bitmexclient = new BitmexClient();
+                        bitmexclient.setConnectionLostTimeout(0);
                         bitmexclient.connectBlocking();
-                        bitmexclient.setConnectionLostTimeout(10);
+
                         bitmexclient.subscribe(true, "trade", "XBTUSD");
                         bitmexclient.subscribe(true, "trade", "XBTM18");
                         bitmexclient.subscribe(true, "trade", "XBTU18");
@@ -215,6 +216,7 @@ public class LaunchWindow extends JFrame {
                 Thread thread = new Thread(() -> {
                     try {
                         bitfinexClient = new BitfinexClient();
+                        bitfinexClient.setConnectionLostTimeout(0);
                         bitfinexClient.connectBlocking();
                         bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
@@ -257,6 +259,7 @@ public class LaunchWindow extends JFrame {
                 Thread thread = new Thread(() -> {
                     try {
                         okexClient = new OkexClient();
+                        okexClient.setConnectionLostTimeout(0);
                         okexClient.connectBlocking();
                         okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
                         okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
@@ -303,6 +306,7 @@ public class LaunchWindow extends JFrame {
                 Thread thread = new Thread(() -> {
                     try {
                         gdaxClient = new GdaxClient();
+                        gdaxClient.setConnectionLostTimeout(0);
                         gdaxClient.connectBlocking();
                         gdaxClient.subscribe(true, "", "");
 
@@ -346,6 +350,7 @@ public class LaunchWindow extends JFrame {
                 Thread thread = new Thread(() -> {
                     try {
                         binanceClient = new BinanceClient("btcusdt@aggTrade");
+                        binanceClient.setConnectionLostTimeout(0);
                         binanceClient.connectBlocking();
 
                     } catch(Exception v) {
