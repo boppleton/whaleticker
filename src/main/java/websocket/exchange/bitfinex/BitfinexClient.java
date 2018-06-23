@@ -86,4 +86,6 @@ public class BitfinexClient extends Client {
         System.out.println("bitfinex onOpen()");
         super.onOpen(handshakedata);
     }
+
+
 }

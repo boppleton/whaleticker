@@ -21,7 +21,17 @@ public abstract class Client extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("Connection closed by " + (remote ? "remote peer" : "us") + " Code: " + code + " Reason: " + reason);
+        System.out.println("closed exchange: " + this.getClass() + "Connection closed by " + (remote ? "remote peer" : "us") + " Code: " + code + " Reason: " + reason);
+
+        if (remote) {
+            System.out.println("reconnecting " + this.getClass());
+            try {
+                reconnectBlocking();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @Override
