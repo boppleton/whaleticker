@@ -38,33 +38,33 @@ public class TradeUni {
 
 
 
-    public String getIcon() {
-
-        String icon = "";
-
-        switch (exchangeName) {
-            case "bitmex":
-                icon = "https://i.imgur.com/3LQBglR.png";
-                break;
-            case "bitfinex":
-                icon = "https://i.imgur.com/7CNGpKm.png";
-                break;
-            case "okex":
-                icon = "https://i.imgur.com/9jX2ikO.png";
-                break;
-            case "gdax":
-                icon = "https://i.imgur.com/nbRCbWo.png";
-                break;
-            case "binance":
-                icon = "https://i.imgur.com/03SBQwq.png";
-                break;
-            default:
-                icon = "";
-                break;
-        }
-
-        return icon;
-    }
+//    public String getIcon() {
+//
+//        String icon = "";
+//
+//        switch (exchangeName) {
+//            case "bitmex":
+//                icon = "https://i.imgur.com/3LQBglR.png";
+//                break;
+//            case "bitfinex":
+//                icon = "https://i.imgur.com/7CNGpKm.png";
+//                break;
+//            case "okex":
+//                icon = "https://i.imgur.com/9jX2ikO.png";
+//                break;
+//            case "gdax":
+//                icon = "https://i.imgur.com/nbRCbWo.png";
+//                break;
+//            case "binance":
+//                icon = "https://i.imgur.com/03SBQwq.png";
+//                break;
+//            default:
+//                icon = "";
+//                break;
+//        }
+//
+//        return icon;
+//    }
 
     public String getSlipIcon() {
 

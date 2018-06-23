@@ -39,11 +39,11 @@ public class LiqOrderCell extends AbstractCellEditor implements TableCellRendere
 
     private void updateData(LiqOrder order) {
 
-        size.setText(Formatter.kFormat((double) Math.abs(order.getAmt()), 0) + " " + (order.getSide() ? "short liq'd " : "long liq'd "));
+        size.setText(Formatter.kFormat((double) Math.abs(order.getAmt()), 0) + (order.getSide() ? " short liq'd " : " long liq'd "));
         size.setIcon(getIcon(order.getExchange()));
         setInstrument(order);
 
-        panel.setBackground(getColor(order.getAmt()));
+        panel.setBackground(getColor(order.getSide(), order.getAmt()));
 
         int orderAmt = Math.abs(order.getAmt());
 
@@ -134,7 +134,7 @@ public class LiqOrderCell extends AbstractCellEditor implements TableCellRendere
         return icon;
     }
 
-    private static Color getColor(int amt) {
+    private static Color getColor(boolean side, int amt) {
 
         int intensity = Math.abs(amt) / 2000;
 
@@ -144,7 +144,7 @@ public class LiqOrderCell extends AbstractCellEditor implements TableCellRendere
             intensity = 1;
         }
 
-        if (amt > 0) {
+        if (side) {
             return new Color(170 - intensity, 255 - intensity / 2, 170 - intensity);
         } else {
             return new Color(255 - intensity / 2, 170 - intensity, 170 - intensity);

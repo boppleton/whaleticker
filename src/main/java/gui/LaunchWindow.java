@@ -37,6 +37,9 @@ public class LaunchWindow extends JFrame {
     public LaunchWindow(String title) throws URISyntaxException, InterruptedException {
         super(title);
 
+        ImageIcon icon = new ImageIcon(getClass().getResource("/whale25.png"));
+        setIconImage(icon.getImage());
+
 
         Buncher.startUpdateThread();
 

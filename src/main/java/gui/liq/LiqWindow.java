@@ -28,6 +28,9 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
     public LiqWindow(String title) {
         super(title);
 
+        Image icon = Toolkit.getDefaultToolkit().getImage("/art.png");
+        this.setIconImage(icon);
+
         Broadcaster.register(this);
 
         liqs = new ArrayList<>();
@@ -211,19 +214,19 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     settingsDialog();
                 }
-//                else if (e.getButton() == MouseEvent.BUTTON1) {
-//                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + 420  + "#@" + 9001 + "@*" + "insert" + "*^" + "ididid" + "^_");
-//
-//                    liqsTable.revalidate();
-//                    liqsScrollPane.revalidate();
-//                    revalidate();
-//                } else if (e.getButton() == MouseEvent.BUTTON2) {
-//                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + 50100 + "#@" + -1 + "@*" + "update" + "*^" + "ididid" + "^_");
-//
-//                    liqsTable.revalidate();
-//                    liqsScrollPane.revalidate();
-//                    revalidate();
-//                }
+                else if (e.getButton() == MouseEvent.BUTTON1) {
+                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + 420  + "#@" + 9001 + "@*" + "insert" + "*^" + "ididid" + "^_");
+
+                    liqsTable.revalidate();
+                    liqsScrollPane.revalidate();
+                    revalidate();
+                } else if (e.getButton() == MouseEvent.BUTTON2) {
+                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + 5000100 + "#@" + -1 + "@*" + "update" + "*^" + "ididid" + "^_");
+
+                    liqsTable.revalidate();
+                    liqsScrollPane.revalidate();
+                    revalidate();
+                }
             }
 
             public void mousePressed(MouseEvent e) {

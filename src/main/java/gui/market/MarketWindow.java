@@ -9,8 +9,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Objects;
 
-//todo: liq
+//todo: title bar/icon choose
 //click to clear orderbook to see whats happening
 
 public class MarketWindow extends JFrame implements Broadcaster.BroadcastListener {
@@ -26,8 +27,6 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     private int minimumTradeAmt = 100;
     private int maxTradeAmt = 999999999;
 
-    private int minLiq = 1;
-
     private ArrayList<String> instruments = new ArrayList<>();
     private JRadioButton bitmexPerpSwapRadio;
     private JRadioButton bitfinexSpotRadio;
@@ -39,6 +38,9 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     private JRadioButton okexThisWeekRadio;
     private JRadioButton okexNextWeekRadio;
     private JRadioButton okexQuarterlyRadio;
+
+    private JComboBox<String> titleCombo;
+    private String titleExchange = "none";
 
     public MarketWindow(String title) {
         super(title);
@@ -79,6 +81,8 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 //                slip = 0;
 //            }
 
+            setWindowTitle(instrument, lastPrice);
+
 
             if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
                 EventQueue.invokeLater(() -> {
@@ -103,6 +107,13 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         }
     }
 
+    private void setWindowTitle(String instrument, double lastPrice) {
+
+        if (instrument.contains(titleExchange)) {
+            setTitle(lastPrice + "  ");
+        }
+
+    }
 
 
     private void settingsDialog() {
@@ -159,6 +170,28 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         gbc.gridy = 1;
         settingsPanel.add(futuresPanel, gbc);
 
+        //title
+        JPanel titleComboPanel = new JPanel(new GridBagLayout());
+        titleComboPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.white, 0), "title bar price"));
+        titleCombo = new JComboBox<>();
+        titleCombo.addItem("none");
+        titleCombo.addItem("bitmexPerp");
+        titleCombo.addItem("bitfinexSpot");
+        titleCombo.addItem("okexSpot");
+        titleCombo.addItem("gdaxSpot");
+        titleCombo.addItem("binanceSpot");
+        titleCombo.addItem("bitmexJune");
+        titleCombo.addItem("bitmexSept");
+        titleCombo.addItem("okexThis");
+        titleCombo.addItem("okexNext");
+        titleCombo.addItem("okexQuat");
+        titleCombo.setSelectedItem(titleExchange);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        titleComboPanel.add(titleCombo, gbc);
+        gbc.gridy = 2;
+        settingsPanel.add(titleComboPanel, gbc);
+
         //size panel
         JPanel tradeSizePanel = new JPanel(new GridBagLayout());
         tradeSizePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.white, 0), "trade size"));
@@ -177,7 +210,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         JTextField maxAmount = new JTextField(maxTradeAmt == 999999999 ? "∞" : Formatter.amountFormat(maxTradeAmt), 5);
         tradeSizePanel.add(maxAmount, gbc);
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         settingsPanel.add(tradeSizePanel, gbc);
 
         //settings panel
@@ -192,7 +225,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         JRadioButton hideFrameRadio = new JRadioButton("hide frame");
         hideFrameRadio.setSelected(hideFrame);
         setPanel.add(hideFrameRadio, gbc);
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         settingsPanel.add(setPanel, gbc);
 
         //send it
@@ -204,7 +237,16 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
             setMinimumAmt(minimumAmount.getText());
             setMaximumAmount(maxAmount.getText());
             setInstruments();
+            setTitleBarExchange(titleCombo.getSelectedItem().toString());
         }
+    }
+
+    private void setTitleBarExchange(String exchange) {
+
+        setTitle("");
+
+        titleExchange = exchange;
+
     }
 
     private void setupTableScrollpane() {
