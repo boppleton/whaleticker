@@ -33,8 +33,8 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
         panel.add(size);
-        panel.add(btcAmt);
         panel.add(slip);
+        panel.add(btcAmt);
         panel.add(instrument);
     }
 
@@ -90,7 +90,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
         btcAmt.setText("");
 
         if (order.getExchange().equals("bitfinex") || order.getExchange().equals("binance") || order.getExchange().equals("gdax")) {
-            if (order.getLastPrice() != 0 && order.getAmt() > 9000) {
+            if (order.getLastPrice() != 0 && order.getAmt() > 90000) {
                 btcAmt.setText("" + Formatter.lowFormat(order.getAmt() / order.getLastPrice()) + " btc");
             }
         }
