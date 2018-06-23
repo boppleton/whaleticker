@@ -69,6 +69,12 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
 
             liqs.add(0, t);
 
+            if (liqs.size() > 100) {
+                liqs.remove(liqs.size() - 1);
+                liqs.remove(liqs.size() - 1);
+                liqs.remove(liqs.size() - 1);
+            }
+
             //maybe remove some of these
             revalidate();
             liqsTable.revalidate();
