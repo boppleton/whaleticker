@@ -1,15 +1,13 @@
 package gui.market;
 
-import websocket.Broadcaster;
-import websocket.Formatter;
-import websocket.TradeUni;
+import utils.Broadcaster;
+import utils.Formatter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Objects;
 
 //todo: title bar/icon choose
 //click to clear orderbook to see whats happening

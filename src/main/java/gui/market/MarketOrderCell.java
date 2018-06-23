@@ -1,6 +1,6 @@
 package gui.market;
 
-import websocket.Formatter;
+import utils.Formatter;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

@@ -1,10 +1,11 @@
-package websocket;
+package utils;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 public class Formatter {
 
+    // d-bo'd from Ilya Saunkin via https://stackoverflow.com/questions/4753251/how-to-go-about-formatting-1200-to-1-2k-in-java
     public static String kFormat(double n, int iteration) {
 
         if (n < 1000) {

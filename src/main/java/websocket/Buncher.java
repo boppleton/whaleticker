@@ -1,34 +1,27 @@
 package websocket;
 
-
+import utils.Broadcaster;
 import java.util.HashMap;
-import java.util.Random;
 
 public class Buncher {
 
-    //trade stream variables
     private static TradeUni bunch = null;
-
-    private static Thread thread;
-
     private static HashMap<String, String> msgs = new HashMap<>();
 
     private static int minAmount = 100;
 
-    public Buncher() {
-
-    }
+    public Buncher() {}
 
     public static void startUpdateThread() {
 
-        thread = new Thread(() -> {
+        Thread thread = new Thread(() -> {
             try {
                 for (;;) {
                     msgs.forEach((key, value) -> Broadcaster.broadcast(msgs.get(key)));
                     msgs.clear();
-                    Thread.sleep( 500);
+                    Thread.sleep(500);
                 }
-            } catch(Exception v) {
+            } catch (Exception v) {
                 v.printStackTrace();
                 System.out.println("loop error!");
             }
@@ -37,7 +30,6 @@ public class Buncher {
     }
 
     public void addToBuncher(TradeUni trade) {
-
 
         //if no bunch start new one
         if (bunch == null) { newBunch(trade); }
@@ -55,8 +47,7 @@ public class Buncher {
         //if there is a bunch but old timestamp or new type, new bunch with this current incoming trade
         else { newBunch(trade); }
     }
-
-
+    
     private void newBunch(TradeUni trade) {
 
         bunch = trade;
@@ -76,27 +67,20 @@ public class Buncher {
             bunch.setLastPrice(lastTrade.getPrice());
         }
 
-
-        String msg = "";
+        String msg;
 
         if (!updateExisting) {
 
             msg = "%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!#" + (int) bunch.getSize() + "#@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*~" + Buncher.bunch.getFirstPrice() + "~=" + bunch.getLastPrice() + "=+";
-//            System.out.println(msg);
 
             msgs.put(bunch.getTimestamp(), msg);
 
         } else if (updateExisting) {
             msg = "%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!#" + (int) bunch.getSize() + "#@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*~" + Buncher.bunch.getFirstPrice() + "~=" + bunch.getLastPrice() + "=+";
-//            System.out.println("+ " + msg);
 
             msgs.remove(bunch.getTimestamp());
             msgs.put(bunch.getTimestamp(), msg);
 
-        }
-
-        if (lastTrade.getExchangeName().contains("okex")) {
-//            System.out.println(bunch.getSize() + " first price bunch: " + bunch.getFirstPrice() + " last price lasttrade: " + lastTrade.getLastPrice());
         }
 
     }

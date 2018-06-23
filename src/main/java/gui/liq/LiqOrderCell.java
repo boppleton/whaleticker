@@ -1,6 +1,6 @@
 package gui.liq;
 
-import websocket.Formatter;
+import utils.Formatter;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

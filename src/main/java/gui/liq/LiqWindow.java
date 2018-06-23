@@ -1,8 +1,7 @@
 package gui.liq;
 
-import websocket.Broadcaster;
-import websocket.Formatter;
-import websocket.TradeUni;
+import utils.Broadcaster;
+import utils.Formatter;
 
 import javax.swing.*;
 import java.awt.*;

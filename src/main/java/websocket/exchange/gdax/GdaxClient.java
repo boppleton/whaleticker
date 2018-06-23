@@ -1,7 +1,7 @@
 package websocket.exchange.gdax;
 
 import org.java_websocket.handshake.ServerHandshake;
-import websocket.Broadcaster;
+import utils.Broadcaster;
 import websocket.Buncher;
 import websocket.Client;
 import websocket.TradeUni;

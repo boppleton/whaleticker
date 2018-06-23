@@ -2,7 +2,6 @@ package gui;
 
 import gui.liq.LiqWindow;
 import gui.market.MarketWindow;
-import websocket.Broadcaster;
 import websocket.Buncher;
 import websocket.exchange.binance.BinanceClient;
 import websocket.exchange.bitfinex.BitfinexClient;
