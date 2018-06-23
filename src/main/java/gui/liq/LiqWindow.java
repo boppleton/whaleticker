@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-//todo: liq active/finished icon
+//todo: liq active/finished icon, price with < change
 //click to clear orderbook to see whats happening
 
 public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
