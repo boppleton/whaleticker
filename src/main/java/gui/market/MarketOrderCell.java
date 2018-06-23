@@ -91,7 +91,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
         if (order.getExchange().equals("bitfinex") || order.getExchange().equals("binance") || order.getExchange().equals("gdax")) {
             if (order.getLastPrice() != 0 && order.getAmt() > 90000) {
-                btcAmt.setText("" + Formatter.lowFormat(order.getAmt() / order.getLastPrice()) + " btc");
+                btcAmt.setText("[" + Formatter.lowFormat(order.getAmt() / order.getLastPrice()) + " btc]");
             }
         }
     }

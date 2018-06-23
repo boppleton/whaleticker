@@ -47,7 +47,7 @@ public class Buncher {
         //if there is a bunch but old timestamp or new type, new bunch with this current incoming trade
         else { newBunch(trade); }
     }
-    
+
     private void newBunch(TradeUni trade) {
 
         bunch = trade;
