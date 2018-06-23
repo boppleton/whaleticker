@@ -45,6 +45,9 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     public MarketWindow(String title) {
         super(title);
 
+        ImageIcon icon = new ImageIcon(getClass().getResource("/whale22.png"));
+        setIconImage(icon.getImage());
+
         Broadcaster.register(this);
 
         orders = new ArrayList();
