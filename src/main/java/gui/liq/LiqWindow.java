@@ -130,7 +130,7 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        JLabel minLabel = new JLabel("minimum liq");
+        JLabel minLabel = new JLabel("minimum liq ");
         liqSizePanel.add(minLabel, gbc);
         gbc.gridx = 1;
         JTextField minimumAmount = new JTextField(Formatter.amountFormat(minLiq), 5);

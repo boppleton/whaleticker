@@ -45,7 +45,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     public MarketWindow(String title) {
         super(title);
 
-        ImageIcon icon = new ImageIcon(getClass().getResource("/whale22.png"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("/whale2.png"));
         setIconImage(icon.getImage());
 
         Broadcaster.register(this);
@@ -200,14 +200,14 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         tradeSizePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.white, 0), "trade size"));
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        JLabel minLabel = new JLabel("minimum");
+        JLabel minLabel = new JLabel("minimum ");
         tradeSizePanel.add(minLabel, gbc);
         gbc.gridx = 1;
         JTextField minimumAmount = new JTextField(Formatter.amountFormat(minimumTradeAmt), 5);
         tradeSizePanel.add(minimumAmount, gbc);
         gbc.gridx = 0;
         gbc.gridy = 1;
-        JLabel maxLabel = new JLabel("maximum");
+        JLabel maxLabel = new JLabel("maximum ");
         tradeSizePanel.add(maxLabel, gbc);
         gbc.gridx = 1;
         JTextField maxAmount = new JTextField(maxTradeAmt == 999999999 ? "∞" : Formatter.amountFormat(maxTradeAmt), 5);
