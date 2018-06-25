@@ -136,7 +136,7 @@ public class LiqOrderCell extends AbstractCellEditor implements TableCellRendere
 
     private static Color getColor(boolean side, int amt) {
 
-        int intensity = Math.abs(amt) / 2000;
+        int intensity = Math.abs(amt) / 4200;
 
         if (intensity > 165) {
             intensity = 165;

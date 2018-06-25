@@ -384,8 +384,12 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         try {
             String minString = minimumAmt.replaceAll("\\D", "");
             this.minimumTradeAmt = Integer.parseInt(minString);
+            if (this.minimumTradeAmt < 100 || minString.equals("")) {
+                this.minimumTradeAmt = 100;
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("error with min amount, setting to 100");
+            this.minimumTradeAmt = 100;
         }
     }
 

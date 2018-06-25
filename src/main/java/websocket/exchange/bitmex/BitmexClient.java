@@ -113,7 +113,7 @@ public class BitmexClient extends Client {
 
             BitmexLiqData liqData = liqBase.getData().get(0);
 
-            System.out.println("new liq trade: " + liqBase.getAction() + " id:" + liqData.getOrderID() + " leavesQty: " + liqData.getLeavesQty() + " price: " + liqData.getPrice() + "side: " + liqData.getSide());
+//            System.out.println("new liq trade: " + liqBase.getAction() + " id:" + liqData.getOrderID() + " leavesQty: " + liqData.getLeavesQty() + " price: " + liqData.getPrice() + "side: " + liqData.getSide());
 
             Broadcaster.broadcast("(bitmexliq)!" + (liqData.getSide() == null ? -1 : liqData.getSide()) + "!#" + (liqData.getLeavesQty() == null ? -1 : liqData.getLeavesQty().doubleValue()) + "#@" + (liqData.getPrice() == null ? -1 : liqData.getPrice()) + "@*" + liqBase.getAction() + "*^" + liqData.getOrderID() + "^_");
 
@@ -159,7 +159,8 @@ public class BitmexClient extends Client {
 
 
     private void onMessageOther(String message) {
-        System.out.println(message);
+
+//        System.out.println(message);
     }
 
     @Override

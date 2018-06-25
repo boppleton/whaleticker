@@ -90,7 +90,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
         btcAmt.setText("");
 
         if (order.getExchange().equals("bitfinex") || order.getExchange().equals("binance") || order.getExchange().equals("gdax")) {
-            if (order.getLastPrice() != 0 && order.getAmt() > 90000) {
+            if (order.getLastPrice() != 0 && Math.abs(order.getAmt()) > 90000) {
                 btcAmt.setText("[" + Formatter.lowFormat(order.getAmt() / order.getLastPrice()) + " btc]");
             }
         }
@@ -169,7 +169,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
     private static Color getColor(int amt) {
 
-        int intensity = Math.abs(amt) / 2000;
+        int intensity = Math.abs(amt) / 4200;
 
         if (intensity > 165) {
             intensity = 165;

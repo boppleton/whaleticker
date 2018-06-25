@@ -58,6 +58,11 @@ public class LaunchWindow extends JFrame {
 
         setupConnectionRadios();
 
+//        connectBitmex(true);
+//        connectBitfinex(true);
+//        connectOkex(true);
+//        connectGdax(true);
+//        connectBinance(true);
 
 
 
