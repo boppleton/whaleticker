@@ -8,6 +8,7 @@ exchange | market orders | liquidations | limit orders
 **gdax** | :heavy_check_mark: | :x: |  :construction:
 **binance** | :heavy_check_mark: | :x: |  :construction:
 
+right click to bring up window settings, middle click to clear window
 
 ![screenshot 1](https://i.imgur.com/OwndQta.png?raw=true "")
 
