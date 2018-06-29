@@ -208,7 +208,7 @@ public class GdaxClient extends Client {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        System.out.println("bitmex onOpen");
+        System.out.println("gdax onOpen");
         super.onOpen(handshakedata);
     }
 }

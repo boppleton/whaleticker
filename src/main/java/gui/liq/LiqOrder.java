@@ -11,12 +11,13 @@ public class LiqOrder {
     private double price;
     private String updates;
     private boolean side;
+    private boolean active = true;
 
     private String timestamp;
     private String id;
 
 
-    public LiqOrder(String exchange, String s, int amount, boolean side, double price, String time, String id) {
+    public LiqOrder(String exchange, String s, int amount, boolean side, double price, String time, String id, boolean active) {
         this.exchange = exchange;
         this.instrument = s;
         this.amt = amount;
@@ -24,6 +25,7 @@ public class LiqOrder {
         this.price = price;
         this.timestamp = time;
         this.id = id;
+        this.active = active;
     }
 
     public String getExchange() { return exchange; }
@@ -54,5 +56,13 @@ public class LiqOrder {
 
     public boolean getSide() {
         return side;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

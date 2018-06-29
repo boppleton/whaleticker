@@ -9,9 +9,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-//todo: title bar/icon choose
-//click to clear orderbook to see whats happening
-
 public class MarketWindow extends JFrame implements Broadcaster.BroadcastListener {
 
     private ArrayList orders;

@@ -104,7 +104,7 @@ public class BitmexClient extends Client {
     private void onMessageLiq(String message) {
 
         if (message.contains("\"keys\":[\"orderID\"]") || message.contains("\"success\":true,\"subscribe\"")) {
-            System.out.println(message);
+//            System.out.println(message);
             return;
         }
 
@@ -165,7 +165,7 @@ public class BitmexClient extends Client {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        System.out.println("bitmex onOpen");
+        System.out.println("bitmex onOpen()");
         super.onOpen(handshakedata);
     }
 

@@ -23,11 +23,11 @@ public class LaunchWindow extends JFrame {
     private static BinanceClient binanceClient;
     private static GdaxClient gdaxClient;
 
-    private JRadioButton bitmexConnectRadio;
-    private JRadioButton bitfinexConnectRadio;
-    private JRadioButton okexConnectRadio;
-    private JRadioButton gdaxConnectRadio;
-    private JRadioButton binanceConnectRadio;
+    private static JRadioButton bitmexConnectRadio;
+    private static JRadioButton bitfinexConnectRadio;
+    private static JRadioButton okexConnectRadio;
+    private static JRadioButton gdaxConnectRadio;
+    private static JRadioButton binanceConnectRadio;
 
     private GridBagConstraints gbc;
     private Container c;
@@ -149,21 +149,18 @@ public class LaunchWindow extends JFrame {
         gbc.gridy = 4;
         connectionsPan.add(binanceConnectRadio, gbc);
 
-        binanceConnectRadio.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    connectBinance(binanceConnectRadio.isSelected());
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
+        binanceConnectRadio.addActionListener(e -> {
+            try {
+                connectBinance(binanceConnectRadio.isSelected());
+            } catch (Exception e1) {
+                e1.printStackTrace();
             }
         });
 
     }
 
 
-    public void connectBitmex(boolean connect) throws URISyntaxException, InterruptedException {
+    public static void connectBitmex(boolean connect) throws URISyntaxException, InterruptedException {
 
         if (connect) {
 
@@ -173,7 +170,7 @@ public class LaunchWindow extends JFrame {
                 Thread thread = new Thread(() -> {
                     try {
                         bitmexclient = new BitmexClient();
-                        bitmexclient.setConnectionLostTimeout(0);
+                        bitmexclient.setConnectionLostTimeout(500);
                         bitmexclient.connectBlocking();
 
                         bitmexclient.subscribe(true, "trade", "XBTUSD");
@@ -185,21 +182,34 @@ public class LaunchWindow extends JFrame {
                         v.printStackTrace();
                         System.out.println("loop error!");
                     }
+
+                    while (bitmexclient == null) {
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if (bitmexclient.isOpen()) {
+                        bitmexConnectRadio.setText("bitmex: connected");
+                    } else {
+                        bitmexConnectRadio.setSelected(false);
+                        bitmexConnectRadio.setText("bitmex: failed connection");
+                    }
+
+
+
                 });
                 thread.start();
 
 
-                Thread.sleep(5000);
 
 
 
 
-                if (bitmexclient.isOpen()) {
-                    bitmexConnectRadio.setText("bitmex: connected");
-                } else {
-                    bitmexConnectRadio.setSelected(false);
-                    bitmexConnectRadio.setText("bitmex: failed connection");
-                }
+
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -209,12 +219,13 @@ public class LaunchWindow extends JFrame {
             bitmexclient.close();
             bitmexclient = null;
             bitmexConnectRadio.setText("bitmex: disconnected");
+            bitmexConnectRadio.setSelected(false);
         }
 
 
     }
 
-    public void connectBitfinex(boolean connect) throws URISyntaxException, InterruptedException {
+    public static void connectBitfinex(boolean connect) throws URISyntaxException, InterruptedException {
 
 
         if (connect) {
@@ -223,7 +234,7 @@ public class LaunchWindow extends JFrame {
                 Thread thread = new Thread(() -> {
                     try {
                         bitfinexClient = new BitfinexClient();
-                        bitfinexClient.setConnectionLostTimeout(0);
+                        bitfinexClient.setConnectionLostTimeout(500);
                         bitfinexClient.connectBlocking();
                         bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
@@ -231,20 +242,31 @@ public class LaunchWindow extends JFrame {
                         v.printStackTrace();
                         System.out.println("loop error!");
                     }
+
+                    while (bitfinexClient == null) {
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if (bitfinexClient.isOpen()) {
+                        bitfinexConnectRadio.setText("bitfinex: connected");
+                    } else {
+                        bitfinexConnectRadio.setSelected(false);
+                        bitfinexConnectRadio.setText("bitfinex: failed connection");
+                    }
+
                 });
+
+
                 thread.start();
 
 
-                Thread.sleep(5000);
 
 
 
-                if (bitfinexClient.isOpen()) {
-                    bitfinexConnectRadio.setText("bitfinex: connected");
-                } else {
-                    bitfinexConnectRadio.setSelected(false);
-                    bitfinexConnectRadio.setText("bitfinex: failed connection");
-                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -254,10 +276,11 @@ public class LaunchWindow extends JFrame {
             bitfinexClient.close();
             bitfinexClient = null;
             bitfinexConnectRadio.setText("bitfinex: disconnected");
+            bitfinexConnectRadio.setSelected(false);
         }
     }
 
-    public void connectOkex(boolean connect) throws URISyntaxException, InterruptedException {
+    public static void connectOkex(boolean connect) throws URISyntaxException, InterruptedException {
 
         if (connect) {
 
@@ -266,7 +289,7 @@ public class LaunchWindow extends JFrame {
                 Thread thread = new Thread(() -> {
                     try {
                         okexClient = new OkexClient();
-                        okexClient.setConnectionLostTimeout(0);
+                        okexClient.setConnectionLostTimeout(500);
                         okexClient.connectBlocking();
                         okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
                         okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
@@ -277,20 +300,30 @@ public class LaunchWindow extends JFrame {
                         v.printStackTrace();
                         System.out.println("loop error!");
                     }
+
+                    while (okexClient == null) {
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if (okexClient.isOpen()) {
+                        okexConnectRadio.setText("okex: connected");
+                    } else {
+                        okexConnectRadio.setSelected(false);
+                        okexConnectRadio.setText("okex: failed connection");
+                    }
+
                 });
                 thread.start();
 
 
-                Thread.sleep(5000);
 
 
 
-                if (okexClient.isOpen()) {
-                    okexConnectRadio.setText("okex: connected");
-                } else {
-                    okexConnectRadio.setSelected(false);
-                    okexConnectRadio.setText("okex: failed connection");
-                }
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -300,11 +333,12 @@ public class LaunchWindow extends JFrame {
             okexClient.close();
             okexClient = null;
             okexConnectRadio.setText("okex: disconnected");
+            okexConnectRadio.setSelected(false);
 
         }
     }
 
-    public void connectGdax(boolean connect) throws URISyntaxException, InterruptedException {
+    public static void connectGdax(boolean connect) throws URISyntaxException, InterruptedException {
 
         if (connect) {
 
@@ -313,7 +347,7 @@ public class LaunchWindow extends JFrame {
                 Thread thread = new Thread(() -> {
                     try {
                         gdaxClient = new GdaxClient();
-                        gdaxClient.setConnectionLostTimeout(0);
+                        gdaxClient.setConnectionLostTimeout(500);
                         gdaxClient.connectBlocking();
                         gdaxClient.subscribe(true, "", "");
 
@@ -321,20 +355,30 @@ public class LaunchWindow extends JFrame {
                         v.printStackTrace();
                         System.out.println("loop error!");
                     }
+
+                    while (gdaxClient == null) {
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if (gdaxClient.isOpen()) {
+                        gdaxConnectRadio.setText("gdax: connected");
+                    } else {
+                        gdaxConnectRadio.setSelected(false);
+                        gdaxConnectRadio.setText("gdax: failed connection");
+                    }
+
                 });
                 thread.start();
 
 
-                Thread.sleep(5000);
 
 
 
-                if (gdaxClient.isOpen()) {
-                    gdaxConnectRadio.setText("gdax: connected");
-                } else {
-                    gdaxConnectRadio.setSelected(false);
-                    gdaxConnectRadio.setText("gdax: failed connection");
-                }
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -344,41 +388,47 @@ public class LaunchWindow extends JFrame {
             gdaxClient.close();
             gdaxClient = null;
             gdaxConnectRadio.setText("gdax: disconnected");
+            gdaxConnectRadio.setSelected(false);
         }
 
     }
 
-    public void connectBinance(boolean connect) throws URISyntaxException, InterruptedException {
+    public static void connectBinance(boolean connect) throws URISyntaxException, InterruptedException {
 
-        if (connect) {
+        if (connect && binanceClient == null) {
 
             try {
 
                 Thread thread = new Thread(() -> {
                     try {
                         binanceClient = new BinanceClient("btcusdt@aggTrade");
-                        binanceClient.setConnectionLostTimeout(0);
+                        binanceClient.setConnectionLostTimeout(500);
                         binanceClient.connectBlocking();
 
                     } catch(Exception v) {
                         v.printStackTrace();
                         System.out.println("loop error!");
                     }
+
+                    while (binanceClient == null) {
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if (binanceClient.isOpen()) {
+                        binanceConnectRadio.setText("binance: connected");
+                    } else {
+                        binanceConnectRadio.setSelected(false);
+                        binanceConnectRadio.setText("binance: failed connection");
+                    }
+
                 });
                 thread.start();
 
 
-                Thread.sleep(5000);
-
-                binanceClient = new BinanceClient("btcusdt@aggTrade");
-                binanceClient.connectBlocking();
-
-                if (binanceClient.isOpen()) {
-                    binanceConnectRadio.setText("binance: connected");
-                } else {
-                    binanceConnectRadio.setSelected(false);
-                    binanceConnectRadio.setText("binance: failed connection");
-                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -388,6 +438,7 @@ public class LaunchWindow extends JFrame {
             binanceClient.close();
             binanceClient = null;
             binanceConnectRadio.setText("binance: disconnected");
+            binanceConnectRadio.setSelected(false);
         }
     }
 

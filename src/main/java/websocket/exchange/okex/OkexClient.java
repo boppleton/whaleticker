@@ -4,6 +4,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import websocket.Buncher;
 import websocket.Client;
 import websocket.TradeUni;
+import websocket.exchange.binance.BinanceClient;
 import websocket.exchange.okex.dto.Spots;
 
 import java.net.URI;
@@ -33,7 +34,7 @@ public class OkexClient extends Client {//todo: remove first pushes by checking 
 
         startTimeString = String.format("%tT", startTime- TimeZone.getTimeZone("GMT+10").getRawOffset());
 
-        System.out.println("start time: " + startTimeString);
+//        System.out.println("start time: " + startTimeString);
     }
 
 
@@ -157,6 +158,30 @@ public class OkexClient extends Client {//todo: remove first pushes by checking 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         System.out.println("okex onOpen()");
+
+        startPingLoop();
+
         super.onOpen(handshakedata);
+    }
+
+    private void startPingLoop() {
+
+        Thread thread = new Thread(() -> {
+
+            for (;;) {
+
+                try {
+                    Thread.sleep(5000);
+                    send("{'event':'ping'}");
+//                    System.out.println("sending ping");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+        });
+        thread.start();
     }
 }

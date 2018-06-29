@@ -8,13 +8,15 @@ public class Buncher {
     private static TradeUni bunch = null;
     private static HashMap<String, String> msgs = new HashMap<>();
 
+    private static Thread thread;
+
     private static int minAmount = 100;
 
     public Buncher() {}
 
     public static void startUpdateThread() {
 
-        Thread thread = new Thread(() -> {
+        thread = new Thread(() -> {
             try {
                 for (;;) {
                     msgs.forEach((key, value) -> Broadcaster.broadcast(msgs.get(key)));
@@ -24,6 +26,10 @@ public class Buncher {
             } catch (Exception v) {
                 v.printStackTrace();
                 System.out.println("loop error!");
+                thread.interrupt();
+                thread.stop();
+                thread = null;
+                startUpdateThread();
             }
         });
         thread.start();

@@ -44,7 +44,7 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
 
             boolean side = (message.substring(message.indexOf("!"), message.indexOf("!#")).contains("Buy"));
             int amount = (int) Double.parseDouble(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
-            System.out.println("liq amount: " + amount);
+//            System.out.println("liq amount: " + amount);
 
             double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.indexOf("@*")));
             String action = String.valueOf(message.substring(message.indexOf("*") + 1, message.indexOf("*^")));
@@ -53,13 +53,15 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
 
 
             if (action.contains("insert")) {
-                addLiq(new LiqOrder("bitmex", Formatter.kFormat(amount, 0) + "", amount, side, price, "time", id));
+                addLiq(new LiqOrder("bitmex", Formatter.kFormat(amount, 0) + "", amount, side, price, "time", id, true));
             } else if (action.contains("update")) {
-                updateLiq(new LiqOrder("bitmex", "", amount, side, price, "time", id));
+                updateLiq(new LiqOrder("bitmex", "", amount, side, price, "time", id, true));
+            } else if (action.contains("delete")) {
+                updateLiq(new LiqOrder("bitmex", "", amount, side, price, "time", id, false));
             }
 
 
-            System.out.println("bitmexliq " + amount + " " + (side ? "buy" : "sell") + " " + "action: " + action);
+//            System.out.println("bitmexliq " + amount + " " + (side ? "buy" : "sell") + " " + "action: " + action);
         }
     }
 
@@ -88,31 +90,42 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
 
         for (int i = 0; i < liqs.size(); i++) {
 
-            System.out.println("looping liqs.  id: " + liqs.get(i).getId() + "tradeuni id: " + tradeUni.getId());
+//            System.out.println("looping liqs.  id: " + liqs.get(i).getId() + "tradeuni id: " + tradeUni.getId());
 
             if (liqs.get(i).getId().equals(tradeUni.getId())) {
 
-                System.out.println("liq has same id..");
+//                System.out.println("liq has same id..");
 //                        int updaterSpot = liqs.indexOf(liqs.get(i));
 //                        String actions = liqs.get(i).getInstrument();
 
                 if (tradeUni.getSize() > 0) {
 
-                    System.out.println("this update size > 0 ... setting instrument");
+//                    System.out.println("this update size > 0 ... setting instrument");
 
                     liqs.get(i).setInstrument(Formatter.kFormat(tradeUni.getSize(), 0) + " < " + liqs.get(i).getInstrument());
 
                     if (tradeUni.getSize() > liqs.get(i).getSize()) {
                         liqs.get(i).setSize(tradeUni.getSize());
-                        System.out.println("updating size from " + liqs.get(i).getSize() + " to " + tradeUni.getSize());
+//                        System.out.println("updating size from " + liqs.get(i).getSize() + " to " + tradeUni.getSize());
                     }
 
-                    System.out.println("ins: " + liqs.get(i).getInstrument());
+//                    System.out.println("ins: " + liqs.get(i).getInstrument());
                 }
-//                        liqs.remove(i);
-//                        liqs.add(updaterSpot, new TradeUni(tradeUni.getExchangeName(), liqs.get(i).getInstrument().concat(" > " + tradeUni.getInstrument()), liqs.get(i).getSize(), tradeUni.getSide(), tradeUni.getPrice(), liqs.get(i).getTimestamp(), tradeUni.getId()));
+                if (!tradeUni.isActive()) {
+                    liqs.get(i).setActive(false);
+                }
+
+
             }
         }
+
+        EventQueue.invokeLater(() -> {
+
+            liqsTable.revalidate();
+            liqsScrollPane.revalidate();
+            revalidate();
+            repaint();
+        });
 
 
     }
@@ -219,19 +232,19 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     settingsDialog();
                 }
-                else if (e.getButton() == MouseEvent.BUTTON1) {
-                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + 420  + "#@" + 9001 + "@*" + "insert" + "*^" + "ididid" + "^_");
-
-                    liqsTable.revalidate();
-                    liqsScrollPane.revalidate();
-                    revalidate();
-                } else if (e.getButton() == MouseEvent.BUTTON2) {
-                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + 5000100 + "#@" + -1 + "@*" + "update" + "*^" + "ididid" + "^_");
-
-                    liqsTable.revalidate();
-                    liqsScrollPane.revalidate();
-                    revalidate();
-                }
+//                else if (e.getButton() == MouseEvent.BUTTON1) {
+//                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + 420  + "#@" + 9001 + "@*" + "insert" + "*^" + "ididid" + "^_");
+//
+//                    liqsTable.revalidate();
+//                    liqsScrollPane.revalidate();
+//                    revalidate();
+//                } else if (e.getButton() == MouseEvent.BUTTON2) {
+//                    Broadcaster.broadcast("(bitmexliq)!" + true + "!#" + -1 + "#@" + -1 + "@*" + "delete" + "*^" + "ididid" + "^_");
+//
+//                    liqsTable.revalidate();
+//                    liqsScrollPane.revalidate();
+//                    revalidate();
+//                }
             }
 
             public void mousePressed(MouseEvent e) {

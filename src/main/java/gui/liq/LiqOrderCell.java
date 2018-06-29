@@ -40,7 +40,7 @@ public class LiqOrderCell extends AbstractCellEditor implements TableCellRendere
     private void updateData(LiqOrder order) {
 
         size.setText(Formatter.kFormat((double) Math.abs(order.getAmt()), 0) + (order.getSide() ? " short liq'd " : " long liq'd "));
-        size.setIcon(getIcon(order.getExchange()));
+        size.setIcon(getIcon(order));
         setInstrument(order);
 
         panel.setBackground(getColor(order.getSide(), order.getAmt()));
@@ -109,13 +109,18 @@ public class LiqOrderCell extends AbstractCellEditor implements TableCellRendere
         instrument.setText(in);
     }
 
-    private Icon getIcon(String exchange) {
+    private Icon getIcon(LiqOrder order) {
 
         ImageIcon icon = null;
 
-        switch (exchange) {
+        switch (order.getExchange()) {
             case "bitmex":
-                icon = new ImageIcon(getClass().getResource("/bitmex22.png"));
+                if (order.isActive()) {
+                    icon = new ImageIcon(getClass().getResource("/alert.png"));
+                } else {
+                    icon = new ImageIcon(getClass().getResource("/bitmex22.png"));
+                }
+
                 break;
             case "bitfinex":
                 icon = new ImageIcon(getClass().getResource("/bitfinex22.png"));

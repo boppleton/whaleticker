@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/whaleticker20.iml" filepath="$PROJECT_DIR$/whaleticker20.iml" />
+      <module fileurl="file://$PROJECT_DIR$/whaleticker.iml" filepath="$PROJECT_DIR$/whaleticker.iml" />
     </modules>
   </component>
 </project>
