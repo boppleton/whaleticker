@@ -193,6 +193,7 @@ public class LaunchWindow extends JFrame {
 
                     if (bitmexclient.isOpen()) {
                         bitmexConnectRadio.setText("bitmex: connected");
+                        bitmexConnectRadio.setSelected(true);
                     } else {
                         bitmexConnectRadio.setSelected(false);
                         bitmexConnectRadio.setText("bitmex: failed connection");
@@ -216,8 +217,10 @@ public class LaunchWindow extends JFrame {
             }
 
         } else {
-            bitmexclient.close();
-            bitmexclient = null;
+            if (bitmexclient != null) {
+                bitmexclient.close();
+                bitmexclient = null;
+            }
             bitmexConnectRadio.setText("bitmex: disconnected");
             bitmexConnectRadio.setSelected(false);
         }
@@ -253,6 +256,7 @@ public class LaunchWindow extends JFrame {
 
                     if (bitfinexClient.isOpen()) {
                         bitfinexConnectRadio.setText("bitfinex: connected");
+                        bitfinexConnectRadio.setSelected(true);
                     } else {
                         bitfinexConnectRadio.setSelected(false);
                         bitfinexConnectRadio.setText("bitfinex: failed connection");
@@ -273,8 +277,10 @@ public class LaunchWindow extends JFrame {
             }
 
         } else {
-            bitfinexClient.close();
-            bitfinexClient = null;
+            if (bitfinexClient != null) {
+                bitfinexClient.close();
+                bitfinexClient = null;
+            }
             bitfinexConnectRadio.setText("bitfinex: disconnected");
             bitfinexConnectRadio.setSelected(false);
         }
@@ -311,6 +317,7 @@ public class LaunchWindow extends JFrame {
 
                     if (okexClient.isOpen()) {
                         okexConnectRadio.setText("okex: connected");
+                        okexConnectRadio.setSelected(true);
                     } else {
                         okexConnectRadio.setSelected(false);
                         okexConnectRadio.setText("okex: failed connection");
@@ -330,8 +337,10 @@ public class LaunchWindow extends JFrame {
             }
 
         } else {
-            okexClient.close();
-            okexClient = null;
+            if (okexClient != null) {
+                okexClient.close();
+                okexClient = null;
+            }
             okexConnectRadio.setText("okex: disconnected");
             okexConnectRadio.setSelected(false);
 
@@ -366,6 +375,7 @@ public class LaunchWindow extends JFrame {
 
                     if (gdaxClient.isOpen()) {
                         gdaxConnectRadio.setText("gdax: connected");
+                        gdaxConnectRadio.setSelected(true);
                     } else {
                         gdaxConnectRadio.setSelected(false);
                         gdaxConnectRadio.setText("gdax: failed connection");
@@ -385,8 +395,10 @@ public class LaunchWindow extends JFrame {
             }
 
         } else {
-            gdaxClient.close();
-            gdaxClient = null;
+            if (gdaxClient != null) {
+                gdaxClient.close();
+                gdaxClient = null;
+            }
             gdaxConnectRadio.setText("gdax: disconnected");
             gdaxConnectRadio.setSelected(false);
         }
@@ -420,6 +432,7 @@ public class LaunchWindow extends JFrame {
 
                     if (binanceClient.isOpen()) {
                         binanceConnectRadio.setText("binance: connected");
+                        binanceConnectRadio.setSelected(true);
                     } else {
                         binanceConnectRadio.setSelected(false);
                         binanceConnectRadio.setText("binance: failed connection");
@@ -435,8 +448,10 @@ public class LaunchWindow extends JFrame {
             }
 
         } else {
-            binanceClient.close();
-            binanceClient = null;
+            if (binanceClient != null) {
+                binanceClient.close();
+                binanceClient = null;
+            }
             binanceConnectRadio.setText("binance: disconnected");
             binanceConnectRadio.setSelected(false);
         }

@@ -16,7 +16,10 @@ public abstract class Client extends WebSocketClient {
     }
 
     @Override
-    public void onOpen(ServerHandshake handshakedata) { }
+    public void onOpen(ServerHandshake handshakedata) {
+
+        System.out.println(getClass().toString());
+    }
 
     @Override
     public void onMessage(String message) { }
@@ -24,6 +27,10 @@ public abstract class Client extends WebSocketClient {
     @Override
     public void onClose(int code, String reason, boolean remote) {
         System.out.println("closed exchange: " + this.getClass() + "Connection closed by " + (remote ? "remote peer" : "us") + " Code: " + code + " Reason: " + reason);
+
+        String closedClass = this.getClass().toString();
+
+        System.out.println("closedclass: " + closedClass);
 
         if (remote) {
             System.out.println("reconnecting " + this.getClass());
@@ -35,7 +42,15 @@ public abstract class Client extends WebSocketClient {
                         Random rand = new Random();
                         try {
                             Thread.sleep(5000 + rand.nextInt(2000));
-                            if (this.getName().contains("mex")) {
+                            System.out.println("reconnect thread done sleeping");
+
+                            System.out.println("clas: " + getClass().toString());
+
+
+                            if (closedClass.contains("mex")) {
+                                System.out.println("reconnect thread mex in classname");
+
+
                                 System.out.println("disconnecting bitmex..");
                                 LaunchWindow.connectBitmex(false);
 
@@ -44,11 +59,11 @@ public abstract class Client extends WebSocketClient {
 
                                 System.out.println("connecting bitmex..");
                                 LaunchWindow.connectBitmex(true);
-                            } else if (this.getName().contains("finex")) {
+                            } else if (closedClass.contains("finex")) {
                                 LaunchWindow.connectBitfinex(false);
                                 Thread.sleep(4000 + rand.nextInt(2000));
                                 LaunchWindow.connectBitfinex(true);
-                            }else if (this.getName().contains("kex")) {
+                            }else if (closedClass.contains("kex")) {
                                 System.out.println("disconnecting okex..");
                                 LaunchWindow.connectOkex(false);
 
@@ -57,11 +72,11 @@ public abstract class Client extends WebSocketClient {
 
                                 System.out.println("connecting okex..");
                                 LaunchWindow.connectOkex(true);
-                            }else if (this.getName().contains("dax")) {
+                            }else if (closedClass.contains("dax")) {
                                 LaunchWindow.connectGdax(false);
                                 Thread.sleep(4000 + rand.nextInt(2000));
                                 LaunchWindow.connectGdax(true);
-                            }else if (this.getName().contains("nance")) {
+                            }else if (closedClass.contains("nance")) {
                                 LaunchWindow.connectBinance(false);
                                 Thread.sleep(4000 + rand.nextInt(2000));
                                 LaunchWindow.connectBinance(true);

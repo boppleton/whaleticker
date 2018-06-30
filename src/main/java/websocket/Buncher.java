@@ -42,8 +42,6 @@ public class Buncher {
             } catch (Exception v) {
                 v.printStackTrace();
                 System.out.println("loop error!");
-                thread.stop();
-                thread = null;
 
                 System.out.println("restarting thread.. ");
                 startUpdateThread();
