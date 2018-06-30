@@ -30,7 +30,11 @@ public class Buncher {
                     while (it.hasNext()) {
                         Map.Entry pair = (Map.Entry)it.next();
                         Broadcaster.broadcast(pair.getValue().toString());
-                        it.remove();
+//                        it.remove();
+                    }
+
+                    if (msgs.size() > 0) {
+                        msgs.clear();
                     }
 
                     Thread.sleep(500);
