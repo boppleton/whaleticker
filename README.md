@@ -1,4 +1,18 @@
-# whaleticker
+<h1>setup</h1>
+
+<h3>linux</h3>
+download the latest .jar file from https://github.com/boppleton/whaleticker/releases
+
+    java -jar whaleticker.jar
+
+
+<h3>windows</h3>
+
+(soon)
+
+
+
+
 
 exchange | market orders | liquidations | limit orders
 -------- | ----------- | ------ | -------
