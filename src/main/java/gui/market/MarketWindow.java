@@ -228,6 +228,8 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         gbc.gridy = 4;
         settingsPanel.add(setPanel, gbc);
 
+        //button color
+
         //send it
         int result = JOptionPane.showConfirmDialog(null, settingsPanel, "settings", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {

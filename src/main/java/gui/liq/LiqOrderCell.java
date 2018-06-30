@@ -19,7 +19,7 @@ public class LiqOrderCell extends AbstractCellEditor implements TableCellRendere
         size = new JLabel();
 
         instrument = new JLabel();
-        instrument.setForeground(Color.GRAY);
+        instrument.setForeground(Color.WHITE);
         instrument.setFont(new Font(null, Font.ITALIC, 12));
 
         slip = new JLabel();

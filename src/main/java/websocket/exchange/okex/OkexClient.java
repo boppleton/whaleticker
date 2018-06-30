@@ -172,7 +172,9 @@ public class OkexClient extends Client {//todo: remove first pushes by checking 
 
                 try {
                     Thread.sleep(9000);
-                    send("{'event':'ping'}");
+                    if (isOpen()) {
+                        send("{'event':'ping'}");
+                    }
 //                    System.out.println("sending ping");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
