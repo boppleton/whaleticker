@@ -18,10 +18,9 @@ public class Buncher {
 
     public static void startUpdateThread() {
 
-        System.out.println("updateloop method start ");
-
         thread = new Thread(() -> {
-            System.out.println("updateloop inside thread..");
+
+            System.out.println("new thread");
 
             try {
                 for (;;) {
@@ -34,8 +33,6 @@ public class Buncher {
                         it.remove();
                     }
 
-
-                    System.out.println("msgs after clear: " + msgs);
                     Thread.sleep(500);
                 }
             } catch (Exception v) {

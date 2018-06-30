@@ -16,7 +16,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     private JScrollPane tradesScrollPane;
     private JTable tradesTable;
 
-    private boolean alwaysOnTop = false;
+    private boolean alwaysOnTop = true;
     private boolean hideFrame = false;
 
     private int minimumTradeAmt = 100;
