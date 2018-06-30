@@ -2,6 +2,8 @@ package websocket;
 
 import utils.Broadcaster;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Buncher {
 
@@ -16,23 +18,39 @@ public class Buncher {
 
     public static void startUpdateThread() {
 
+        System.out.println("updateloop method start ");
+
         thread = new Thread(() -> {
+            System.out.println("updateloop inside thread..");
+
             try {
                 for (;;) {
-                    msgs.forEach((key, value) -> Broadcaster.broadcast(msgs.get(key)));
-                    msgs.clear();
+                    System.out.println("sgs: "+ msgs);
+
+                    Iterator it = msgs.entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry pair = (Map.Entry)it.next();
+                        Broadcaster.broadcast(pair.getValue().toString());
+                        it.remove();
+                    }
+
+
+                    System.out.println("msgs after clear: " + msgs);
                     Thread.sleep(500);
                 }
             } catch (Exception v) {
                 v.printStackTrace();
                 System.out.println("loop error!");
-                thread.interrupt();
                 thread.stop();
                 thread = null;
+
+                System.out.println("restarting thread.. ");
                 startUpdateThread();
             }
         });
         thread.start();
+
+
     }
 
     public void addToBuncher(TradeUni trade) {

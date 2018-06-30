@@ -53,7 +53,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     @Override
     public void receiveBroadcast(String message) {
 
-        if (!message.contains("liq")) {
+        if (message != null && !message.contains("liq")) {
 
             final int size;
 
