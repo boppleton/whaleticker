@@ -24,7 +24,7 @@ public class Buncher {
 
             try {
                 for (;;) {
-                    System.out.println("sgs: "+ msgs);
+//                    System.out.println("sgs: "+ msgs);
 
                     Iterator it = msgs.entrySet().iterator();
                     while (it.hasNext()) {

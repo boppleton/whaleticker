@@ -19,7 +19,7 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
     private JScrollPane liqsScrollPane;
     private JTable liqsTable;
 
-    private boolean alwaysOnTop = false;
+    private boolean alwaysOnTop = true;
     private boolean hideFrame = false;
 
     private int minLiq = 1;
@@ -29,6 +29,8 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
 
         Image icon = Toolkit.getDefaultToolkit().getImage("/art.png");
         this.setIconImage(icon);
+
+        setAlwaysTop(true);
 
         Broadcaster.register(this);
 
