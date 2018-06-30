@@ -22,6 +22,8 @@ public class OkexClient extends Client {//todo: remove first pushes by checking 
     private static long startTime;
     private static String startTimeString;
 
+    private static Thread thread;
+
 
     public OkexClient() throws URISyntaxException {
         super(new URI("wss://real.okex.com:10440/websocket/okexapi"));
@@ -166,7 +168,7 @@ public class OkexClient extends Client {//todo: remove first pushes by checking 
 
     private void startPingLoop() {
 
-        Thread thread = new Thread(() -> {
+        thread = new Thread(() -> {
 
             for (;;) {
 
