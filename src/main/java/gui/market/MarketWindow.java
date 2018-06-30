@@ -5,6 +5,8 @@ import utils.Formatter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 public class MarketWindow extends JFrame implements Broadcaster.BroadcastListener {
 
     private ArrayList orders;
+    private ArrayList exampleOrders;
 
     private JScrollPane tradesScrollPane;
     private JTable tradesTable;
@@ -48,6 +51,18 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         Broadcaster.register(this);
 
         orders = new ArrayList();
+
+        exampleOrders = new ArrayList();
+        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 100, 0, 9000, 9000));
+        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 1000, 0, 9000, 9000));
+        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 10000, 0, 9000, 9000));
+        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 100000, 0, 9000, 9000));
+        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 500000, 0, 9000, 9000));
+        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 1000000, 0, 9000, 9000));
+
+
+
+
 
         setupTableScrollpane();
     }
@@ -128,6 +143,19 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 
         gbc.gridx = 0;
         gbc.gridy = 0;
+
+//        gbc.anchor = GridBagConstraints.CENTER;
+
+////button color
+//        JButton appearanceButton = new JButton("appearance");
+//        appearanceButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                showAppearanceDialog();
+//            }
+//        });
+//        settingsPanel.add(appearanceButton, gbc);
+
         gbc.anchor = GridBagConstraints.WEST;
 
         //spot panel
@@ -228,7 +256,9 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         gbc.gridy = 4;
         settingsPanel.add(setPanel, gbc);
 
-        //button color
+
+
+
 
         //send it
         int result = JOptionPane.showConfirmDialog(null, settingsPanel, "settings", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -241,6 +271,47 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
             setInstruments();
             setTitleBarExchange(titleCombo.getSelectedItem().toString());
         }
+    }
+
+    private void showAppearanceDialog() {
+
+        JPanel settingsPanel = new JPanel();
+
+        settingsPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        gbc.anchor = GridBagConstraints.EAST;
+//        gbc.anchor = GridBagConstraints.CENTER;
+//        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+
+        tradesTable = new JTable(new MarketOrdersTableModel(exampleOrders));
+        tradesTable.setDefaultRenderer(MarketOrder.class, new MarketOrderCell());
+        tradesTable.setRowHeight(22);
+        tradesTable.setTableHeader(null);
+
+
+        settingsPanel.add(tradesTable, gbc);
+
+
+        JRadioButton jradio = new JRadioButton("hi");
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        settingsPanel.add(jradio, gbc);
+
+
+        //send it
+        int result = JOptionPane.showConfirmDialog(null, settingsPanel, "appearance", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+
+
+        }
+
     }
 
     private void setTitleBarExchange(String exchange) {
