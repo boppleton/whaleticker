@@ -3,7 +3,8 @@
 <h3>linux</h3>
 download the latest .jar file from https://github.com/boppleton/whaleticker/releases
 
-    java -jar whaleticker.jar
+execute in terminal:
+`java -jar whaleticker.jar`
 
 
 <h3>windows</h3>
@@ -11,7 +12,7 @@ download the latest .jar file from https://github.com/boppleton/whaleticker/rele
 (soon)
 
 
-
+- - - -
 
 
 exchange | market orders | liquidations | limit orders
