@@ -85,33 +85,42 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
     }
 
 
-    private void updateLiq(LiqOrder tradeUni) {
+    private void updateLiq(LiqOrder liq) {
 
 
         for (int i = 0; i < liqs.size(); i++) {
 
-//            System.out.println("looping liqs.  id: " + liqs.get(i).getId() + "tradeuni id: " + tradeUni.getId());
+//            System.out.println("looping liqs.  id: " + liqs.get(i).getId() + "tradeuni id: " + liq.getId());
 
-            if (liqs.get(i).getId().equals(tradeUni.getId())) {
+            if (liqs.get(i).getId().equals(liq.getId())) {
 
 //                System.out.println("liq has same id..");
 //                        int updaterSpot = liqs.indexOf(liqs.get(i));
 //                        String actions = liqs.get(i).getInstrument();
 
-                if (tradeUni.getSize() > 0) {
+                if (liq.getSize() > 0) {
 
 //                    System.out.println("this update size > 0 ... setting instrument");
 
-                    liqs.get(i).setInstrument(Formatter.kFormat(tradeUni.getSize(), 0) + " < " + liqs.get(i).getInstrument());
+                    liqs.get(i).setInstrument(Formatter.kFormat(liq.getSize(), 0) + " < " + liqs.get(i).getInstrument());
 
-                    if (tradeUni.getSize() > liqs.get(i).getSize()) {
-                        liqs.get(i).setSize(tradeUni.getSize());
-//                        System.out.println("updating size from " + liqs.get(i).getSize() + " to " + tradeUni.getSize());
+                    if (liq.getSize() > liqs.get(i).getSize()) {
+                        liqs.get(i).setSize(liq.getSize());
+//                        System.out.println("updating size from " + liqs.get(i).getSize() + " to " + liq.getSize());
                     }
 
 //                    System.out.println("ins: " + liqs.get(i).getInstrument());
                 }
-                if (!tradeUni.isActive()) {
+
+                if (liq.isActive()) {
+                    LiqOrder currentLiq = liqs.get(i);
+
+                    liqs.remove(currentLiq);
+                    liqs.add(0, liqs.get(i));
+                }
+
+
+                if (!liq.isActive()) {
                     liqs.get(i).setActive(false);
                 }
 

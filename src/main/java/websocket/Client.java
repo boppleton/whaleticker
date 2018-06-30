@@ -35,23 +35,33 @@ public abstract class Client extends WebSocketClient {
                         Random rand = new Random();
                         try {
                             Thread.sleep(5000 + rand.nextInt(2000));
-                            if (this.getClass().toString().contains("BitmexClient")) {
+                            if (this.getName().contains("mex")) {
+                                System.out.println("disconnecting bitmex..");
                                 LaunchWindow.connectBitmex(false);
+
+                                System.out.println("pausing bitmex..");
                                 Thread.sleep(4000 + rand.nextInt(2000));
+
+                                System.out.println("connecting bitmex..");
                                 LaunchWindow.connectBitmex(true);
-                            } else if (this.getClass().toString().contains("BitfinexClient")) {
+                            } else if (this.getName().contains("finex")) {
                                 LaunchWindow.connectBitfinex(false);
                                 Thread.sleep(4000 + rand.nextInt(2000));
                                 LaunchWindow.connectBitfinex(true);
-                            }else if (this.getClass().toString().contains("OkexClient")) {
+                            }else if (this.getName().contains("kex")) {
+                                System.out.println("disconnecting okex..");
                                 LaunchWindow.connectOkex(false);
+
+                                System.out.println("puasing okex..");
                                 Thread.sleep(4000 + rand.nextInt(2000));
+
+                                System.out.println("connecting okex..");
                                 LaunchWindow.connectOkex(true);
-                            }else if (this.getClass().toString().contains("GdaxClient")) {
+                            }else if (this.getName().contains("dax")) {
                                 LaunchWindow.connectGdax(false);
                                 Thread.sleep(4000 + rand.nextInt(2000));
                                 LaunchWindow.connectGdax(true);
-                            }else if (this.getClass().toString().contains("BinanceClient")) {
+                            }else if (this.getName().contains("nance")) {
                                 LaunchWindow.connectBinance(false);
                                 Thread.sleep(4000 + rand.nextInt(2000));
                                 LaunchWindow.connectBinance(true);
