@@ -51,37 +51,40 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
         int orderAmt = Math.abs(order.getAmt());
 
+        int up = 1;
+
         //do this better
         if (orderAmt < 1000) {
             panel.setBorder(null);
             size.setForeground(Color.GRAY);
-            size.setFont(new Font(null, Font.ITALIC, 12));
+            size.setFont(new Font(null, Font.ITALIC, 12 + up));
 
         } else if (orderAmt < 10000) {
             panel.setBorder(null);
             size.setForeground(Color.DARK_GRAY);
-            size.setFont(new Font(null, Font.ITALIC, 13));
+            size.setFont(new Font(null, Font.ITALIC, 13 + up));
 
         } else if (orderAmt < 100000) {
             panel.setBorder(null);
             size.setForeground(Color.BLACK);
-            size.setFont(new Font(null, Font.PLAIN, 15));
+            size.setFont(new Font(null, Font.PLAIN, 15 + up));
 
         } else if (orderAmt < 500000) {
             panel.setBorder(null);
             size.setForeground(Color.BLACK);
-            size.setFont(new Font(null, Font.PLAIN, 17));
+            size.setFont(new Font(null, Font.PLAIN, 17 + up));
 
         } else if (orderAmt < 1000000) {
             panel.setBorder(null);
             size.setForeground(Color.WHITE);
-            size.setFont(new Font(null, Font.BOLD, 17));
+            size.setFont(new Font(null, Font.BOLD, 17 + up));
 
         } else { //over 1mil
             panel.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
             size.setForeground(Color.YELLOW);
-            size.setFont(new Font(null, Font.BOLD, 17));
+            size.setFont(new Font(null, Font.BOLD, 17 + up));
         }
+
 
     }
 

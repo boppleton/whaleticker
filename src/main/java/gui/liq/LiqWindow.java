@@ -116,7 +116,7 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
                     LiqOrder currentLiq = liqs.get(i);
 
                     liqs.remove(currentLiq);
-                    liqs.add(0, liqs.get(i));
+                    liqs.add(0, currentLiq);
                 }
 
 
