@@ -27,10 +27,12 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
     public LiqWindow(String title) {
         super(title);
 
+        setAlwaysOnTop(true);
+
         Image icon = Toolkit.getDefaultToolkit().getImage("/art.png");
         this.setIconImage(icon);
 
-        setAlwaysTop(true);
+
 
         Broadcaster.register(this);
 
