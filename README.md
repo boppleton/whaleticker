@@ -1,11 +1,13 @@
 <h1>setup</h1>
 
 <h3>linux</h3>
-download the latest .jar file from https://github.com/boppleton/whaleticker/releases
+<ul>
+  <li>download the latest .jar from https://github.com/boppleton/whaleticker/releases</li>
 
-execute in terminal:
-`java -jar whaleticker.jar`
+<li>navigate to .jar location in a terminal</li>
+<li><code>java -jar whaleticker.jar</code></li>
 
+</ul>
 
 <h3>windows</h3>
 
