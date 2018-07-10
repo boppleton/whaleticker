@@ -84,7 +84,34 @@ public class BitfinexClient extends Client {
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         System.out.println("bitfinex onOpen()");
+
+        startPingLoop();
         super.onOpen(handshakedata);
+    }
+
+    private static Thread thread;
+
+    private void startPingLoop() {
+
+        thread = new Thread(() -> {
+
+            for (;;) {
+
+                try {
+                    Thread.sleep(9000);
+                    if (isOpen()) {
+                        send("{'event':'ping'}");
+                    }
+//                    System.out.println("sending ping");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+        });
+        thread.start();
     }
 
 

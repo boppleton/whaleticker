@@ -1,4 +1,4 @@
-package gui.market;
+package gui.limit;
 
 import utils.Broadcaster;
 import utils.Formatter;
@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-public class MarketWindow extends JFrame implements Broadcaster.BroadcastListener {
+public class LimitWindow extends JFrame implements Broadcaster.BroadcastListener {
 
     private ArrayList orders;
     private ArrayList exampleOrders;
@@ -22,7 +22,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     private boolean alwaysOnTop = true;
     private boolean hideFrame = false;
 
-    private int minimumTradeAmt = 100;
+    private int minimumTradeAmt = 400000;
     private int maxTradeAmt = 999999999;
 
     private ArrayList<String> instruments = new ArrayList<>();
@@ -40,7 +40,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     private JComboBox<String> titleCombo;
     private String titleExchange = "none";
 
-    public MarketWindow(String title) {
+    public LimitWindow(String title) {
         super(title);
 
         setAlwaysOnTop(true);
@@ -53,12 +53,12 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         orders = new ArrayList();
 
         exampleOrders = new ArrayList();
-        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 100, 0, 9000, 9000));
-        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 1000, 0, 9000, 9000));
-        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 10000, 0, 9000, 9000));
-        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 100000, 0, 9000, 9000));
-        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 500000, 0, 9000, 9000));
-        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 1000000, 0, 9000, 9000));
+        exampleOrders.add(new LimitOrder("bitmex", "XBTUSD", 100, 0, 9000, 9000));
+        exampleOrders.add(new LimitOrder("bitmex", "XBTUSD", 1000, 0, 9000, 9000));
+        exampleOrders.add(new LimitOrder("bitmex", "XBTUSD", 10000, 0, 9000, 9000));
+        exampleOrders.add(new LimitOrder("bitmex", "XBTUSD", 100000, 0, 9000, 9000));
+        exampleOrders.add(new LimitOrder("bitmex", "XBTUSD", 500000, 0, 9000, 9000));
+        exampleOrders.add(new LimitOrder("bitmex", "XBTUSD", 1000000, 0, 9000, 9000));
 
 
 
@@ -70,7 +70,9 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     @Override
     public void receiveBroadcast(String message) {
 
-        if (message != null && !message.contains("liq") && !message.contains("book")) {
+        if (message != null && message.contains("book")) {
+
+//            System.out.println(message);
 
             final int size;
 
@@ -80,11 +82,11 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
             double firstPrice = Double.valueOf(message.substring(message.indexOf("~") + 1, message.indexOf("~=")));
             double lastPrice = Double.valueOf(message.substring(message.indexOf("=") + 1, message.indexOf("=+")));
 
-            if (exchange.equals("bitmex") || side) {
+//            if (exchange.equals("bitmex") || side) {
                 size = Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
-            } else {
-                size = -Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
-            }
+//            } else {
+//                size = -Integer.parseInt(message.substring(message.indexOf("#") + 1, message.indexOf("#@")));
+//            }
 
             int slipInt = (int) (lastPrice - firstPrice);
 
@@ -99,12 +101,14 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
             setWindowTitle(instrument, lastPrice);
 
 
-            if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
+            if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt) {
+
+//                System.out.println("within min/max, add");
                 EventQueue.invokeLater(() -> {
 
 //                    System.out.println("adding " + exchange + size + side);
 
-                    orders.add(0, new MarketOrder(exchange, instrument, size, slip, firstPrice, lastPrice));
+                    orders.add(0, new LimitOrder(exchange, instrument, size, slip, firstPrice, lastPrice));
 
                     if (orders.size() > 150) {
                         orders.remove(orders.size() - 1);
@@ -289,8 +293,8 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 //        gbc.fill = GridBagConstraints.HORIZONTAL;
 
 
-        tradesTable = new JTable(new MarketOrdersTableModel(exampleOrders));
-        tradesTable.setDefaultRenderer(MarketOrder.class, new MarketOrderCell());
+        tradesTable = new JTable(new LimitOrdersTableModel(exampleOrders));
+        tradesTable.setDefaultRenderer(LimitOrder.class, new LimitOrderCell());
         tradesTable.setRowHeight(22);
         tradesTable.setTableHeader(null);
 
@@ -324,8 +328,8 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
 
     private void setupTableScrollpane() {
 
-        tradesTable = new JTable(new MarketOrdersTableModel(orders));
-        tradesTable.setDefaultRenderer(MarketOrder.class, new MarketOrderCell());
+        tradesTable = new JTable(new LimitOrdersTableModel(orders));
+        tradesTable.setDefaultRenderer(LimitOrder.class, new LimitOrderCell());
         tradesTable.setRowHeight(22);
         tradesTable.setTableHeader(null);
         tradesTable.addMouseListener(new MouseListener() {

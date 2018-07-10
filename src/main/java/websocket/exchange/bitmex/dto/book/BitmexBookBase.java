@@ -1,9 +1,6 @@
 package websocket.exchange.bitmex.dto.book;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +12,9 @@ import java.util.Map;
         "action",
         "data"
 })
+@JsonIgnoreProperties(ignoreUnknown = true)
+
+
 public class BitmexBookBase {
 
     @JsonProperty("table")
@@ -55,5 +55,6 @@ public class BitmexBookBase {
     public void setData(List<BitmexBookData> data) {
         this.data = data;
     }
+
 
 }

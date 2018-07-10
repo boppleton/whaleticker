@@ -3,21 +3,31 @@ package websocket.exchange.bitmex;
 import org.java_websocket.handshake.ServerHandshake;
 import utils.Broadcaster;
 import websocket.Client;
-import websocket.exchange.bitmex.book.BitmexBook;
+//import websocket.exchange.bitmex.book.BitmexBook;
+import websocket.exchange.bitmex.book.BitmexBookEvent;
 import websocket.exchange.bitmex.dto.book.BitmexBookBase;
 import websocket.exchange.bitmex.dto.book.BitmexBookData;
 import websocket.exchange.bitmex.dto.liq.BitmexLiqBase;
 import websocket.exchange.bitmex.dto.liq.BitmexLiqData;
 import websocket.exchange.bitmex.dto.trade.BitmexTrade;
 import websocket.exchange.bitmex.dto.trade.BitmexTrades;
+
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class BitmexClient extends Client {
 
-    private static BitmexBook book = new BitmexBook();
+    int totalBids = 0;
+    int totalAsks = 0;
+
+    private static HashMap<BigInteger, BitmexBookEvent> book = new HashMap<>();
+
+//    private static BitmexBook book = new BitmexBook();
 
     public BitmexClient() throws URISyntaxException {
         super(new URI("wss://www.bitmex.com/realtime/"));
@@ -126,6 +136,7 @@ public class BitmexClient extends Client {
 
     private void onMessageOrderBook(String message) throws IOException {
 
+
         if (message.contains("\"success\":true,\"subscribe\":\"orderBookL2")) {
             System.out.println("subscribed to bitmex orderbookl2");
             System.out.println(message);
@@ -141,19 +152,80 @@ public class BitmexClient extends Client {
 
 
         for (BitmexBookData bookData : bookBase.getData()) {
-            System.out.println("new book order:" + bookBase.getAction() + " side:" + bookData.getSide() + " size:" + bookData.getSize() + " price:" + bookData.getPrice() + " id: " + bookData.getId());
+//            System.out.println("new book order:" + bookBase.getAction() + " side:" + bookData.getSide() + " size:" + bookData.getSize() + " price:" + bookData.getPrice() + " id: " + bookData.getId());
 
+            BitmexBookEvent bookEvent = new BitmexBookEvent(bookBase.getAction(), bookData.getSide(), bookData.getSize() == null ? -1 : bookData.getSize(), bookData.getPrice() == null ? -1 : bookData.getPrice(), bookData.getId());
 
-            if (bookBase.getAction().contains("insert")) {
-                book.insert(bookData.getPrice(), bookData.getSize(), bookData.getId(), bookData.getSide().contains("Buy"));
-            } else if (bookBase.getAction().contains("update")) {
-                book.update(bookData.getSize(), bookData.getId(), bookData.getSide().contains("Buy"));
-            } else if (bookBase.getAction().contains("delete")) {
-                book.delete(bookData.getId(), bookData.getSide().contains("Buy"));
+//            System.out.println("new book event: " + bookEvent.toString());
+
+            //if ID doesnt exist in book, add this event to book
+            if (!book.containsKey(bookEvent.getId())) {
+                book.put(bookEvent.getId(), bookEvent);
             }
 
+            //if id does exist, update it
+            if (book.containsKey(bookEvent.getId())) {
+
+                //get event at current ID
+                BitmexBookEvent eventAtId = book.get(bookEvent.getId());
+
+                eventAtId.setSide(bookEvent.getSide());
+
+                //check for amt added
+                if (bookEvent.getSize() - eventAtId.getSize() >= 100) {
+                    if (eventAtId.getPrice() > 6000 && eventAtId.getPrice() < 7000) {
+//                        System.out.println(message);
+//                        System.out.println("limit added: " + bookEvent.getSide() + " " + (bookEvent.getSize() - eventAtId.getSize()) + " @ " + eventAtId.getPrice());
+//
+                        Broadcaster.broadcast("book" + "%" + "bitmex" + "%<" + "bitmexPerp" + ">!" + (bookEvent.getSide().equals("Buy")) + "!#" + (bookEvent.getSide().equals("Sell") ? "-" : "") + Math.abs(bookEvent.getSize() - eventAtId.getSize()) + "#@" + eventAtId.getPrice() + "@*" + "timestamp" + "*~" + "0" + "~=" + "1" + "=+");
+                    }
+//                } else if (bookEvent.getSize() - eventAtId.getSize() <= 100) {
+//                    if (eventAtId.getPrice() > 6000 && eventAtId.getPrice() < 7000) {
+//                        System.out.println(message);
+//                        System.out.println("limit added: " + bookEvent.getSide() + " " + (bookEvent.getSize() - eventAtId.getSize()) + " @ " + eventAtId.getPrice());
+//
+//                        Broadcaster.broadcast("book" + "%" + "bitmex" + "%<" + "bitmexPerp" + ">!" + (bookEvent.getSide().equals("Sell")) + "!#" + (bookEvent.getSide().equals("Buy") ? "-" : "") + -Math.abs(bookEvent.getSize() - eventAtId.getSize()) + "#@" + eventAtId.getPrice() + "@*" + "timestamp" + "*~" + "0" + "~=" + "1" + "=+");
+//                    }
+
+                }
+
+
+
+                if (bookEvent.getSize() != -1) {
+                    eventAtId.setSize(bookEvent.getSize());
+                }
+
+                if (bookEvent.getPrice() != -1) {
+                    eventAtId.setPrice(bookEvent.getPrice());
+                }
+
+
+
+                book.replace(eventAtId.getId(), eventAtId);
+            }
 
         }
+
+        totalBids = 0;
+        totalAsks = 0;
+
+        book.forEach(this::addTotalsPrint);
+
+//        System.out.println("total bids: " + totalBids + " total asks: " + totalAsks);
+
+    }
+
+    private void addTotalsPrint(BigInteger key, BitmexBookEvent bookevent) {
+
+
+
+        if (bookevent.getSide().contains("Buy")) {
+            totalBids += bookevent.getSize();
+        } else {
+            totalAsks += bookevent.getSize();
+        }
+
+
 
     }
 
@@ -166,9 +238,36 @@ public class BitmexClient extends Client {
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         System.out.println("bitmex onOpen()");
+
+        startPingLoop();
+
         super.onOpen(handshakedata);
     }
 
+    private static Thread thread;
+
+    private void startPingLoop() {
+
+        thread = new Thread(() -> {
+
+            for (; ; ) {
+
+                try {
+                    Thread.sleep(9000);
+                    if (isOpen()) {
+                        send("{'event':'ping'}");
+                    }
+//                    System.out.println("sending ping");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+        });
+        thread.start();
+    }
 
 
 }

@@ -1,5 +1,6 @@
 package gui;
 
+import gui.limit.LimitWindow;
 import gui.liq.LiqWindow;
 import gui.market.MarketWindow;
 import websocket.Buncher;
@@ -54,6 +55,9 @@ public class LaunchWindow extends JFrame {
 
         setupLiqsButton();
 
+
+//        setupLimitButton();
+
 //        setupOrderbookButton();
 
         setupConnectionRadios();
@@ -68,10 +72,12 @@ public class LaunchWindow extends JFrame {
 
     }
 
+
+
     private void setupConnectionRadios() {
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         c.add(connectionsPan, gbc);
 
         gbc.anchor = GridBagConstraints.WEST;
@@ -177,6 +183,8 @@ public class LaunchWindow extends JFrame {
                         bitmexclient.subscribe(true, "trade", "XBTM18");
                         bitmexclient.subscribe(true, "trade", "XBTU18");
                         bitmexclient.subscribe(true, "liquidation", "XBTUSD");
+
+//                        bitmexclient.subscribe(true, "orderBookL2", "XBTUSD");
 
                     } catch(Exception v) {
                         v.printStackTrace();
@@ -479,15 +487,24 @@ public class LaunchWindow extends JFrame {
 
     }
 
-    private void setupOrderbookButton() {
+    private void setupLimitButton() {
 
-        //orderbook button
-        JButton orderbookButton = new JButton("limit orders");
+        //market orders button
+        JButton limitButton = new JButton("limit orders");
+        limitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                LimitWindow limitWindow = new LimitWindow("");
+                limitWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //set X close
+                limitWindow.setSize(120, 400); //set dimensions
+                limitWindow.setLocationRelativeTo(null); //null makes it open in the center
+                limitWindow.setVisible(true); //show window
+            }
+        });
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.weighty = 1;
-        c.add(orderbookButton, gbc);
+        c.add(limitButton, gbc);
 
     }
 

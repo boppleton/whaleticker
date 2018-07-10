@@ -1,4 +1,4 @@
-package gui.market;
+package gui.limit;
 
 import utils.Formatter;
 
@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
-public class MarketOrderCell extends AbstractCellEditor implements TableCellRenderer {
+public class LimitOrderCell extends AbstractCellEditor implements TableCellRenderer {
 
     private JPanel panel;
     private JLabel size;
@@ -14,7 +14,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
     private JLabel slip;
     private JLabel btcAmt;
 
-    MarketOrderCell() {
+    LimitOrderCell() {
 
         size = new JLabel();
 
@@ -39,7 +39,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
     }
 
 
-    private void updateData(MarketOrder order) {
+    private void updateData(LimitOrder order) {
 
         size.setText(Formatter.kFormat((double) Math.abs(order.getAmt()), 0) + " ");
         size.setIcon(getIcon(order.getExchange()));
@@ -88,7 +88,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
     }
 
-    private void setBtcAmt(MarketOrder order) {
+    private void setBtcAmt(LimitOrder order) {
 
         btcAmt.setText("");
 
@@ -100,7 +100,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
     }
 
-    private void setSlip(MarketOrder order) {
+    private void setSlip(LimitOrder order) {
 
         int slipInt = order.getSlip();
 
@@ -120,7 +120,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
         }
     }
 
-    private void setInstrument(MarketOrder order) {
+    private void setInstrument(LimitOrder order) {
 
         String in = order.getInstrument();
 
@@ -195,7 +195,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        MarketOrder order = (MarketOrder) value;
+        LimitOrder order = (LimitOrder) value;
         updateData(order);
         return panel;
     }

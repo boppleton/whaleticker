@@ -82,6 +82,35 @@ public class BinanceClient extends Client {
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         System.out.println("binance onOpen");
+
+//        startPingLoop();
+
         super.onOpen(handshakedata);
     }
+
+    private static Thread thread;
+
+    private void startPingLoop() {
+
+        thread = new Thread(() -> {
+
+            for (;;) {
+
+                try {
+                    Thread.sleep(9000);
+                    if (isOpen()) {
+                        send("ping");
+                    }
+//                    System.out.println("sending ping");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+        });
+        thread.start();
+    }
+
 }

@@ -5,7 +5,7 @@ import utils.Broadcaster;
 import websocket.Buncher;
 import websocket.Client;
 import websocket.TradeUni;
-import websocket.exchange.bitmex.book.BitmexBook;
+//import websocket.exchange.bitmex.book.BitmexBook;
 import websocket.exchange.bitmex.dto.book.BitmexBookBase;
 import websocket.exchange.bitmex.dto.book.BitmexBookData;
 import websocket.exchange.bitmex.dto.liq.BitmexLiqBase;
@@ -23,7 +23,7 @@ public class GdaxClient extends Client {
 
     private static Buncher buncher = new Buncher();
 
-    private static BitmexBook book = new BitmexBook();
+//    private static BitmexBook book = new BitmexBook();
 
     public static int minSize = 1000;
 
@@ -92,13 +92,13 @@ public class GdaxClient extends Client {
             System.out.println("new book order:" + bookBase.getAction() + " side:" + bookData.getSide() + " size:" + bookData.getSize() + " price:" + bookData.getPrice() + " id: " + bookData.getId());
 
 
-            if (bookBase.getAction().contains("insert")) {
-                book.insert(bookData.getPrice(), bookData.getSize(), bookData.getId(), bookData.getSide().contains("Buy"));
-            } else if (bookBase.getAction().contains("update")) {
-                book.update(bookData.getSize(), bookData.getId(), bookData.getSide().contains("Buy"));
-            } else if (bookBase.getAction().contains("delete")) {
-                book.delete(bookData.getId(), bookData.getSide().contains("Buy"));
-            }
+//            if (bookBase.getAction().contains("insert")) {
+//                book.insert(bookData.getPrice(), bookData.getSize(), bookData.getId(), bookData.getSide().contains("Buy"));
+//            } else if (bookBase.getAction().contains("update")) {
+//                book.update(bookData.getSize(), bookData.getId(), bookData.getSide().contains("Buy"));
+//            } else if (bookBase.getAction().contains("delete")) {
+//                book.delete(bookData.getId(), bookData.getSide().contains("Buy"));
+//            }
 
 
         }
@@ -209,6 +209,35 @@ public class GdaxClient extends Client {
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         System.out.println("gdax onOpen");
+
+//        startPingLoop();
+
         super.onOpen(handshakedata);
+    }
+
+    private static Thread thread;
+
+    private void startPingLoop() {
+
+        thread = new Thread(() -> {
+
+            for (;;) {
+
+                try {
+                    Thread.sleep(9000);
+                    if (isOpen()) {
+                        System.out.println("sending binance ping");
+                        send("ping");
+                    }
+//                    System.out.println("sending ping");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+        });
+        thread.start();
     }
 }

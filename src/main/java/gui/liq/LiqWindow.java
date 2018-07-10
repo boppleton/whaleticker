@@ -116,12 +116,12 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
 //                    System.out.println("ins: " + liqs.get(i).getInstrument());
                 }
 
-                if (liq.isActive()) {
-                    LiqOrder currentLiq = liqs.get(i);
-
-                    liqs.remove(currentLiq);
-                    liqs.add(0, currentLiq);
-                }
+//                if (liq.isActive()) {
+//                    LiqOrder currentLiq = liqs.get(i);
+//
+//                    liqs.remove(currentLiq);
+//                    liqs.add(0, currentLiq);
+//                }
 
 
                 if (!liq.isActive()) {
