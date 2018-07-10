@@ -1,6 +1,6 @@
 <h1>setup</h1>
 
-<h3>linux</h3>
+
 <ul>
   <li>download the latest .jar from https://github.com/boppleton/whaleticker/releases</li>
 
@@ -9,9 +9,9 @@
 
 </ul>
 
-<h3>windows</h3>
 
-(soon)
+
+
 
 
 - - - -
