@@ -9,6 +9,8 @@
 
 </ul>
 
+if you need help, google 'how to run a .jar on windows' or DM me on discord (Boppleton in cartel)
+
 
 
 
