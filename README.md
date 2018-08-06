@@ -1,19 +1,6 @@
-<h1>setup</h1>
+<h1>whaleticker</h1>
 
-
-<ul>
-  <li>download the latest .jar from https://github.com/boppleton/whaleticker/releases</li>
-
-<li>navigate to .jar location in a terminal</li>
-<li><code>java -jar whaleticker.jar</code></li>
-
-</ul>
-
-if you need help, google 'how to run a .jar on windows' or DM me on discord (Boppleton in cartel)
-
-
-
-
+latest release (v1.3): https://github.com/boppleton/whaleticker/releases/tag/v1.3
 
 
 - - - -
@@ -27,11 +14,8 @@ exchange | market orders | liquidations | limit orders
 **gdax** | :heavy_check_mark: | :x: |  :construction:
 **binance** | :heavy_check_mark: | :x: |  :construction:
 
-right click to bring up window settings, middle click to clear trades.  make sure you connect to the exchanges you want to use on the launch window
 
 ![screenshot 1](https://i.imgur.com/OwndQta.png?raw=true "")
 
 ![screenshot 2](https://i.imgur.com/XLCGGtD.png?raw=true "")
-
-![screenshot 2](https://i.imgur.com/uznkpBe.jpg?raw=true "")
 
