@@ -96,8 +96,8 @@ public class BitmexClient extends Client {
             case "XBTUSD":
                 instrument = "bitmexPerp";
                 break;
-            case "XBTM18":
-                instrument = "bitmexJune";
+            case "XBTZ18":
+                instrument = "bitmexDec";
                 break;
             case "XBTU18":
                 instrument = "bitmexSept";

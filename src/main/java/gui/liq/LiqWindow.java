@@ -1,5 +1,7 @@
 package gui.liq;
 
+import org.pushingpixels.substance.api.SubstanceCortex;
+import org.pushingpixels.substance.api.SubstanceSlices;
 import utils.Broadcaster;
 import utils.Formatter;
 
@@ -29,8 +31,8 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
 
         setAlwaysOnTop(true);
 
-        Image icon = Toolkit.getDefaultToolkit().getImage("/art.png");
-        this.setIconImage(icon);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/artgood.png"));
+        setIconImage(icon.getImage());
 
 
 
@@ -284,6 +286,8 @@ public class LiqWindow extends JFrame implements Broadcaster.BroadcastListener {
         EventQueue.invokeLater(() -> {
             if (radio && !hideFrame) {
                 dispose();
+                SubstanceCortex.WindowScope.extendContentIntoTitlePane(this, SubstanceSlices.HorizontalGravity.TRAILING, SubstanceSlices.VerticalGravity.TOP);
+
                 setUndecorated(true);
                 setVisible(true);
 

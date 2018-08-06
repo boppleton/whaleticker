@@ -5,11 +5,13 @@ import utils.Formatter;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.text.Normalizer;
 
 public class MarketOrderCell extends AbstractCellEditor implements TableCellRenderer {
 
     private JPanel panel;
     private JLabel size;
+    private JLabel price;
     private JLabel instrument;
     private JLabel slip;
     private JLabel btcAmt;
@@ -26,6 +28,10 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
         slip.setForeground(Color.BLACK);
         slip.setFont(new Font(null, Font.PLAIN, 11));
 
+        price = new JLabel();
+        price.setForeground(Color.DARK_GRAY);
+        price.setFont(new Font(null, Font.PLAIN, 10));
+
         btcAmt = new JLabel();
         btcAmt.setForeground(Color.DARK_GRAY);
         btcAmt.setFont(new Font(null, Font.ITALIC, 11));
@@ -34,6 +40,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
         panel.add(size);
         panel.add(slip);
+        panel.add(price);
         panel.add(btcAmt);
         panel.add(instrument);
     }
@@ -46,6 +53,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
         setInstrument(order);
         setSlip(order);
         setBtcAmt(order);
+        setPrice(order);
 
         panel.setBackground(getColor(order.getAmt()));
 
@@ -88,6 +96,21 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
     }
 
+    private void setPrice(MarketOrder order) {
+
+        if (order.isShowPrices() && order.getLastPrice() > 0) {
+
+            double pricedub = Formatter.round(order.getLastPrice(), 1);
+            String pricestr = String.valueOf(pricedub);
+
+            price.setText("" + (pricedub % 1 == 0 ? pricestr.substring(0, pricestr.length() - 2) : pricedub));
+
+        } else {
+            price.setText("");
+        }
+
+    }
+
     private void setBtcAmt(MarketOrder order) {
 
         btcAmt.setText("");
@@ -106,7 +129,7 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
 
         if (Math.abs(slipInt) >= 1) {
 
-            slip.setText(String.valueOf(Math.abs(slipInt)));
+            slip.setText(String.valueOf(Math.abs(slipInt))+ " ");
 
             if (slipInt > 0) {
                 slip.setIcon(new ImageIcon(getClass().getResource("/uparrow.png")));
@@ -125,8 +148,8 @@ public class MarketOrderCell extends AbstractCellEditor implements TableCellRend
         String in = order.getInstrument();
 
         switch (in) {
-            case "bitmexJune":
-                instrument.setText(" june");
+            case "bitmexDec":
+                instrument.setText(" december");
                 break;
             case "bitmexSept":
                 instrument.setText(" september");

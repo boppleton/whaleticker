@@ -1,12 +1,12 @@
 package gui.limit;
 
+import org.pushingpixels.substance.api.SubstanceCortex;
+import org.pushingpixels.substance.api.SubstanceSlices;
 import utils.Broadcaster;
 import utils.Formatter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -428,6 +428,7 @@ public class LimitWindow extends JFrame implements Broadcaster.BroadcastListener
         EventQueue.invokeLater(() -> {
             if (radio && !hideFrame) {
                 dispose();
+                SubstanceCortex.WindowScope.extendContentIntoTitlePane(this, SubstanceSlices.HorizontalGravity.TRAILING, SubstanceSlices.VerticalGravity.TOP);
                 setUndecorated(true);
                 setVisible(true);
 

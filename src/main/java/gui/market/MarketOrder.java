@@ -10,8 +10,9 @@ public class MarketOrder {
     private int slip;
     private double firstPrice;
     private double lastPrice;
+    private boolean showPrices;
 
-    MarketOrder(String exchange, String instrument, int amt, int slip, double firstPrice, double lastPrice) {
+    MarketOrder(String exchange, String instrument, int amt, int slip, double firstPrice, double lastPrice, boolean showPrices) {
 
         this.exchange = exchange;
         this.instrument = instrument;
@@ -19,6 +20,7 @@ public class MarketOrder {
         this.slip = slip;
         this.firstPrice = firstPrice;
         this.lastPrice = lastPrice;
+        this.showPrices = showPrices;
     }
 
     public String getExchange() { return exchange; }
@@ -28,4 +30,5 @@ public class MarketOrder {
     public double getFirstPrice() { return firstPrice; }
     public double getLastPrice() { return lastPrice; }
 
+    public boolean isShowPrices() { return showPrices; }
 }

@@ -1,15 +1,16 @@
 package gui.market;
 
+import org.pushingpixels.substance.api.SubstanceCortex;
+import org.pushingpixels.substance.api.SubstanceSlices;
 import utils.Broadcaster;
 import utils.Formatter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+
 
 public class MarketWindow extends JFrame implements Broadcaster.BroadcastListener {
 
@@ -19,6 +20,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     private JScrollPane tradesScrollPane;
     private JTable tradesTable;
 
+    private boolean showPrices = false;
     private boolean alwaysOnTop = true;
     private boolean hideFrame = false;
 
@@ -31,7 +33,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
     private JRadioButton okexSpotRadio;
     private JRadioButton gdaxSpotRadio;
     private JRadioButton binanceSpotRadio;
-    private JRadioButton bitmexJuneRadio;
+    private JRadioButton bitmexDecRadio;
     private JRadioButton bitmexSeptRadio;
     private JRadioButton okexThisWeekRadio;
     private JRadioButton okexNextWeekRadio;
@@ -48,17 +50,18 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         ImageIcon icon = new ImageIcon(getClass().getResource("/whale2.png"));
         setIconImage(icon.getImage());
 
+
         Broadcaster.register(this);
 
         orders = new ArrayList();
 
-        exampleOrders = new ArrayList();
-        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 100, 0, 9000, 9000));
-        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 1000, 0, 9000, 9000));
-        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 10000, 0, 9000, 9000));
-        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 100000, 0, 9000, 9000));
-        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 500000, 0, 9000, 9000));
-        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 1000000, 0, 9000, 9000));
+//        exampleOrders = new ArrayList();
+//        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 100, 0, 9000, 9000));
+//        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 1000, 0, 9000, 9000));
+//        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 10000, 0, 9000, 9000));
+//        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 100000, 0, 9000, 9000));
+//        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 500000, 0, 9000, 9000));
+//        exampleOrders.add(new MarketOrder("bitmex", "XBTUSD", 1000000, 0, 9000, 9000));
 
 
 
@@ -102,9 +105,9 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
             if (Math.abs(size) >= minimumTradeAmt && Math.abs(size) <= maxTradeAmt && instruments.contains(instrument)) {
                 EventQueue.invokeLater(() -> {
 
-//                    System.out.println("adding " + exchange + size + side);
+                    System.out.println("adding " + exchange + size + side + "showp[rices? " + showPrices);
 
-                    orders.add(0, new MarketOrder(exchange, instrument, size, slip, firstPrice, lastPrice));
+                    orders.add(0, new MarketOrder(exchange, instrument, size, slip, firstPrice, lastPrice, showPrices));
 
                     if (orders.size() > 150) {
                         orders.remove(orders.size() - 1);
@@ -181,8 +184,8 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         futuresPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.white, 0), "futures"));
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        bitmexJuneRadio = new JRadioButton("bitmex june futures", instruments.contains("bitmexJune"));
-        futuresPanel.add(bitmexJuneRadio, gbc);
+        bitmexDecRadio = new JRadioButton("bitmex december futures", instruments.contains("bitmexDec"));
+        futuresPanel.add(bitmexDecRadio, gbc);
         gbc.gridy = 1;
         bitmexSeptRadio = new JRadioButton("bitmex september futures", instruments.contains("bitmexSept"));
         futuresPanel.add(bitmexSeptRadio, gbc);
@@ -208,7 +211,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         titleCombo.addItem("okexSpot");
         titleCombo.addItem("gdaxSpot");
         titleCombo.addItem("binanceSpot");
-        titleCombo.addItem("bitmexJune");
+        titleCombo.addItem("bitmexDec");
         titleCombo.addItem("bitmexSept");
         titleCombo.addItem("okexThis");
         titleCombo.addItem("okexNext");
@@ -246,10 +249,16 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         setPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.white, 0), "settings"));
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
+
+        JRadioButton showPricesRadio = new JRadioButton("show prices");
+        showPricesRadio.setSelected(showPrices);
+        setPanel.add(showPricesRadio, gbc);
+
+        gbc.gridy = 1;
         JRadioButton alwaysOnTopRadio = new JRadioButton("always on top");
         alwaysOnTopRadio.setSelected(alwaysOnTop);
         setPanel.add(alwaysOnTopRadio, gbc);
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         JRadioButton hideFrameRadio = new JRadioButton("hide frame");
         hideFrameRadio.setSelected(hideFrame);
         setPanel.add(hideFrameRadio, gbc);
@@ -264,6 +273,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         int result = JOptionPane.showConfirmDialog(null, settingsPanel, "settings", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
 
+            setShowPrices(showPricesRadio.isSelected());
             setAlwaysTop(alwaysOnTopRadio.isSelected());
             setShowFrame(hideFrameRadio.isSelected());
             setMinimumAmt(minimumAmount.getText());
@@ -271,6 +281,22 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
             setInstruments();
             setTitleBarExchange(titleCombo.getSelectedItem().toString());
         }
+    }
+
+    private void setShowPrices(boolean radio) {
+
+            EventQueue.invokeLater(() -> {
+
+                if (radio && !showPrices) {
+                    showPrices = true;
+                } else if (!radio && showPrices) {
+                    showPrices = false;
+                }
+                tradesScrollPane.revalidate();
+            });
+
+
+
     }
 
     private void showAppearanceDialog() {
@@ -397,7 +423,7 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         setInstrumentBool(gdaxSpotRadio, "gdaxSpot");
         setInstrumentBool(binanceSpotRadio, "binanceSpot");
 
-        setInstrumentBool(bitmexJuneRadio, "bitmexJune");
+        setInstrumentBool(bitmexDecRadio, "bitmexDec");
         setInstrumentBool(bitmexSeptRadio, "bitmexSept");
 
         setInstrumentBool(okexThisWeekRadio, "okexThis");
@@ -424,8 +450,10 @@ public class MarketWindow extends JFrame implements Broadcaster.BroadcastListene
         EventQueue.invokeLater(() -> {
             if (radio && !hideFrame) {
                 dispose();
+                SubstanceCortex.WindowScope.extendContentIntoTitlePane(this, SubstanceSlices.HorizontalGravity.TRAILING, SubstanceSlices.VerticalGravity.TOP);
                 setUndecorated(true);
                 setVisible(true);
+
 
                 hideFrame = true;
             } else if (!radio && hideFrame) {

@@ -1,10 +1,6 @@
 import gui.LaunchWindow;
-import org.knowm.xchart.QuickChart;
-import org.knowm.xchart.SwingWrapper;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
-import org.knowm.xchart.style.Styler;
-import org.pushingpixels.substance.api.skin.*;
+import org.pushingpixels.substance.api.skin.SubstanceGraphiteGoldLookAndFeel;
+
 import javax.swing.*;
 
 public class Main {
@@ -19,7 +15,9 @@ public class Main {
 
         SwingUtilities.invokeLater(() -> {
             try {
-                UIManager.setLookAndFeel(new SubstanceGraphiteAquaLookAndFeel());
+                JFrame.setDefaultLookAndFeelDecorated(true);
+                UIManager.setLookAndFeel(new SubstanceGraphiteGoldLookAndFeel());
+
             } catch (Exception e) {
                 System.out.println("Substance look&feel load error!");
             }

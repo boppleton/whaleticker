@@ -28,6 +28,11 @@ public class Formatter {
         return String.format("%.0f", Math.abs(Math.rint(size)));
     }
 
+    public static double round (double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
+    }
+
     public static String amountFormat(int minimumTradeAmt) {
 
         return NumberFormat.getNumberInstance(Locale.getDefault()).format(minimumTradeAmt);

@@ -53,10 +53,12 @@ public class LaunchWindow extends JFrame {
 
         setupMarketButton();
 
+        setupLimitButton();
+
         setupLiqsButton();
 
 
-//        setupLimitButton();
+
 
 //        setupOrderbookButton();
 
@@ -180,7 +182,7 @@ public class LaunchWindow extends JFrame {
                         bitmexclient.connectBlocking();
 
                         bitmexclient.subscribe(true, "trade", "XBTUSD");
-                        bitmexclient.subscribe(true, "trade", "XBTM18");
+                        bitmexclient.subscribe(true, "trade", "XBTZ18");
                         bitmexclient.subscribe(true, "trade", "XBTU18");
                         bitmexclient.subscribe(true, "liquidation", "XBTUSD");
 
@@ -510,13 +512,17 @@ public class LaunchWindow extends JFrame {
 
     private void setupMarketButton() {
 
+        System.out.println("market button setup");
+
         //market orders button
         JButton marketButton = new JButton("market orders");
         marketButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                System.out.println("market button pressed");
                 MarketWindow marketWindow = new MarketWindow("");
                 marketWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //set X close
-                marketWindow.setSize(120, 400); //set dimensions
+                marketWindow.setSize(150, 400); //set dimensions
+                
                 marketWindow.setLocationRelativeTo(null); //null makes it open in the center
                 marketWindow.setVisible(true); //show window
             }
@@ -528,4 +534,24 @@ public class LaunchWindow extends JFrame {
         c.add(marketButton, gbc);
 
     }
+
+    public void removeMinMaxClose(Component comp)
+    {
+        if(comp instanceof JButton)
+        {
+            String accName = ((JButton) comp).getAccessibleContext().getAccessibleName();
+            System.out.println(accName);
+            if(accName.equals("Maximize")|| accName.equals("Iconify")||
+                    accName.equals("Close")) comp.getParent().remove(comp);
+        }
+        if (comp instanceof Container)
+        {
+            Component[] comps = ((Container)comp).getComponents();
+            for(int x = 0, y = comps.length; x < y; x++)
+            {
+                removeMinMaxClose(comps[x]);
+            }
+        }
+    }
+
 }
