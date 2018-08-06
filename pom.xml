@@ -6,7 +6,7 @@
 
     <groupId>whaleticker</groupId>
     <artifactId>whaleticker</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.3</version>
     <build>
         <plugins>
             <plugin>

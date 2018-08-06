@@ -53,7 +53,7 @@ public class LaunchWindow extends JFrame {
 
         setupMarketButton();
 
-        setupLimitButton();
+//        setupLimitButton();
 
         setupLiqsButton();
 
