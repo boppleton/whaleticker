@@ -15,7 +15,5 @@ exchange | market orders | liquidations | limit orders
 **binance** | :heavy_check_mark: | :x: |  :construction:
 
 
-![screenshot 1](https://i.imgur.com/OwndQta.png?raw=true "")
-
-![screenshot 2](https://i.imgur.com/XLCGGtD.png?raw=true "")
+![screenshot 1](https://i.imgur.com/yNz7c52.png?raw=true "")
 
